@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View,  Text} from 'react-native';
 import { SplashScreen } from './src/SplashScreen';
+import { SignInScreen } from './src/SignInScreen';
 
 export const App = () => {
   const [ShowSplashScreen, setShowSplashScreen] = useState(true);
@@ -19,9 +20,7 @@ export const App = () => {
       )
     } else{
       return(
-        <Text>
-          MainScreen
-        </Text>
+        <SignInScreen/>
       )
     }
   }
