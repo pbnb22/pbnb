@@ -5,6 +5,11 @@ import { SignInScreen } from './src/SignInScreen';
 
 export const App = () => {
   const [ShowSplashScreen, setShowSplashScreen] = useState(true);
+  const [Team, setTeam] = useState(null);
+
+  const onSetTeam = (TeamSelected) => {
+      setTeam(TeamSelected);
+  }
 
   useEffect(
     ()=>{
@@ -19,9 +24,21 @@ export const App = () => {
         <SplashScreen/>
       )
     } else{
-      return(
-        <SignInScreen/>
-      )
+      if(Team === null)
+      {
+        return(
+          <SignInScreen onSetTeam = {onSetTeam}/>
+        )
+      }
+      else{
+        return(
+          <View>
+            <Text>
+              MainScreen 
+            </Text>
+          </View>  
+        )
+      }
     }
   }
 

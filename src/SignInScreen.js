@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import {StyleSheet,View, Text, Image, TouchableOpacity} from 'react-native';
+import {StyleSheet,View, Text, Image, TouchableOpacity, ProgressViewIOSComponent} from 'react-native';
 
 import DropDownPicker from 'react-native-dropdown-picker';
 
-export const SignInScreen = () => {
+export const SignInScreen = (props) => {
 
     const [open, setOpen] = useState(false)
     const [value, setValue] = useState(null);
@@ -11,6 +11,11 @@ export const SignInScreen = () => {
       {label: '연료전지제어개발1팀', value: 'FCCD'},
       {label: '연료전지제어개발2팀', value: 'FCCF'},
     ]);
+
+
+    const onSetTeam = async () => {
+        props.onSetTeam(value);
+    }
 
     return(
         <View style = {styles.container}>
@@ -43,7 +48,9 @@ export const SignInScreen = () => {
                     maxHeight={100}
                     />
                 </View>
-                <TouchableOpacity style ={styles.confirm}>
+                <TouchableOpacity 
+                onPress={onSetTeam}
+                style ={styles.confirm}>
                     <Text style ={{color : 'white'}}>
                         확인
                     </Text>
