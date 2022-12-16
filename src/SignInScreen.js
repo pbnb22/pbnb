@@ -7,11 +7,6 @@ export const SignInScreen = (props) => {
 
     const [open, setOpen] = useState(false)
     const [value, setValue] = useState(null);
-    const [items, setItems] = useState([
-      {label: '연료전지제어개발1팀', value: 'FCCD'},
-      {label: '연료전지제어개발2팀', value: 'FCCF'},
-    ]);
-
 
     const onSetTeam = async () => {
         props.onSetTeam(value);
@@ -41,10 +36,10 @@ export const SignInScreen = (props) => {
                     placeholder="팀을 선택해주세요"
                     open={open}
                     value={value}
-                    items={items}
+                    items={props.Teamitems}
                     setOpen={setOpen}
                     setValue={setValue}
-                    setItems={setItems}
+                    setItems={props.setTeamitems}
                     maxHeight={100}
                     />
                 </View>

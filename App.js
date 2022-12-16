@@ -9,6 +9,10 @@ export const App = () => {
   const [ShowSplashScreen, setShowSplashScreen] = useState(true);
   const [TeamData, setTeamData] = useState(null);
   const [pbnbData, setpbnbData] = useState();
+  const [Teamitems, setTeamitems] = useState([
+    {label: '연료전지제어개발1팀', value: 'FCCD'},
+    {label: '연료전지제어개발2팀', value: 'FCCF'},
+  ]);
 
   const onSetTeam = async (TeamSelected) => {
     if(TeamSelected !== null){
@@ -68,7 +72,7 @@ export const App = () => {
       }
       else{
         return(
-          <SignInScreen onSetTeam = {onSetTeam}/>
+          <SignInScreen onSetTeam = {onSetTeam} Teamitems = {Teamitems} setTeamitems = {setTeamitems}/>
         )
       }
     }
