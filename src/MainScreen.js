@@ -1,5 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState, useCallback, useMemo } from "react";
 import {StyleSheet,View, Text, Image, TouchableOpacity, DatePickerIOSComponent} from 'react-native';
+import {
+  BottomSheetBackdrop,
+  BottomSheetModal,
+  BottomSheetModalProvider,
+} from '@gorhom/bottom-sheet';
+import DropDownPicker from 'react-native-dropdown-picker';
 
 export const MainScreen = (props) => {
   const [breakfastStatus, setBreakfastStatus] = useState(false);
@@ -8,6 +14,17 @@ export const MainScreen = (props) => {
 
   const week = ['일','월','화','수','목','금','토'];
   const [targetDate, setTargetDate] = useState(new Date());
+
+  //backSheet
+  const bottomSheetModalRef = useRef(null);
+  const snapPoints = useMemo(() => ['25%', '50%'], []);
+  const handlePresentModalPress = useCallback(() => {
+    bottomSheetModalRef.current?.present();
+  }, []);
+  const handleSheetChanges = useCallback((index: number) => {
+    console.log('handleSheetChanges', index);
+  }, []);
+
 
   useEffect(() => {
     var hours = targetDate.getHours();
@@ -71,7 +88,6 @@ export const MainScreen = (props) => {
   }
 
   const lunchtab = () => {
-
       return(
         <View style={[lunchStauts === true ? {backgroundColor:'blue'} : {backgroundColor:'white'}]}>
           <Text>
@@ -79,12 +95,9 @@ export const MainScreen = (props) => {
           </Text>
         </View>
       )
-    
-
   }
 
   const dinnertab = () => {
-
       return(
         <View style={[dinnerStatus === true ? {backgroundColor:'blue'} : {backgroundColor:'white'}]}>
           <Text>
@@ -92,8 +105,6 @@ export const MainScreen = (props) => {
           </Text>
         </View>
       )
-    
-
   }
 
   const breakfastscreen = () => {
@@ -148,7 +159,10 @@ export const MainScreen = (props) => {
           {props.TeamLabel}
           </Text>
         </View>
-        <TouchableOpacity style={{marginLeft:'auto',flexDirection: 'row', justifyContent:'flex-end', marginRight:20}}>
+        <TouchableOpacity 
+        style={{marginLeft:'auto',flexDirection: 'row', justifyContent:'flex-end', marginRight:20}}
+        onPress={handlePresentModalPress}
+        >
           <Image
             source={require('./assets/setting.png')}
             style={{width: 25, height: 25}}
@@ -176,7 +190,9 @@ export const MainScreen = (props) => {
             resizeMode='contain'
           />
         </TouchableOpacity>
-        <TouchableOpacity style={{margin: 5}} onPress={nextDate}>
+        <TouchableOpacity 
+        style={{margin: 5}} 
+        onPress={nextDate}>
           <Image
               source={require('./assets/right_arrow.png')}
               style={{width: 25, height: 25}}
@@ -209,6 +225,20 @@ export const MainScreen = (props) => {
           테스트용 - 팀 리셋
         </Text>
       </TouchableOpacity>
+      <BottomSheetModalProvider>
+            <View style={{flex:1, justifyContent: 'center'}}>
+                <BottomSheetModal
+                ref={bottomSheetModalRef}
+                index={1}
+                snapPoints={snapPoints}
+                onChange={handleSheetChanges}
+                >
+                <View style={{flex:1, alignItems: 'center'}}>
+                    <Text>팀을 변경하고 싶으세요??</Text>
+                </View>
+                </BottomSheetModal>
+            </View>
+        </BottomSheetModalProvider>
     </View>
   );
 };
@@ -231,7 +261,7 @@ const styles = StyleSheet.create({
       borderBottomColor: "#bdbdbd",
       borderBottomWidth: 1,
       width:'100%',
-      // backgroundColor: "blue"
+      //backgroundColor: "blue"
     },
     itemcontainer: {
       // backgroundColor: 'blue',

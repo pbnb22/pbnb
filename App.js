@@ -5,6 +5,7 @@ import { SignInScreen } from './src/SignInScreen';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { MainScreen } from './src/MainScreen';
 import axios from 'axios'; //For pbnb API Test
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 export const App = () => {
   const [ShowSplashScreen, setShowSplashScreen] = useState(true);
@@ -87,9 +88,9 @@ export const App = () => {
   }
 
   return (
-    <View>
+    <GestureHandlerRootView>
       {getScreen()}
-    </View>
+    </GestureHandlerRootView>
     
   );
 };
