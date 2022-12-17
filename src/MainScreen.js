@@ -16,10 +16,12 @@ export const MainScreen = (props) => {
   const [dinnerStatus, setDinnerStatus] = useState(false);
 
   const week = ['일','월','화','수','목','금','토'];
+  const week_en = ['sun','mon','tue','wed','thu','fri','sat'];
   const [targetDate, setTargetDate] = useState(new Date());
 
   useEffect(() => {
     var hours = targetDate.getHours();
+    props.setdayOfWeek(week_en[targetDate.getDay()]);
     
     if (hours < 8){
       setBreakfastStatus(true);
@@ -66,21 +68,25 @@ export const MainScreen = (props) => {
     }
   }
   //
-  const beforeDate = () => {
+  const beforeDate = async () => {
     const newDate = new Date(targetDate);
-    newDate.setDate(targetDate.getDate() - 1);
-    setTargetDate(newDate);
+    await newDate.setDate(targetDate.getDate() - 1);
+
+    await setTargetDate(newDate);
+    await props.setdayOfWeek(week_en[newDate.getDay()]);
   };
 
-  const todayDate = () => {
+  const todayDate = async () => {
     const newDate = new Date();
     setTargetDate(newDate);
+    await props.setdayOfWeek(week_en[targetDate.getDay()]);
   };
 
-  const nextDate = () => {
+  const nextDate = async () => {
     const newDate = new Date(targetDate);
-    newDate.setDate(targetDate.getDate() + 1);
-    setTargetDate(newDate);
+    await newDate.setDate(targetDate.getDate() + 1);
+    await setTargetDate(newDate);
+    await props.setdayOfWeek(week_en[newDate.getDay()]);
   };
 
 

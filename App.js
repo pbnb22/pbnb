@@ -41,7 +41,6 @@ export const App = () => {
         await setTrgtTeamData(TeamSelected); //useState TeamTrgtData Setting
         let res = Teamitems.filter(it => it.value.includes(TeamSelected));
         await setTrgtTeamLabelData(res[0].label); //useState TeamTrgtLabel Setting
-        await getPbnbState(TeamSelected);
         await AsyncStorage.setItem("StoragedTeamData", TeamSelected); //Local Storage 저장
       }
     }
@@ -55,6 +54,7 @@ export const App = () => {
       if(storageTeamData) {
         console.log("GET Team data from storage");
         onSetTeam(storageTeamData);
+        getPbnbState(storageTeamData);
       }
       else{
         console.log("Team Information is not saved");
@@ -66,6 +66,14 @@ export const App = () => {
   },
   []
 );
+
+useEffect(
+  ()=>{
+    getPbnbState(TrgtTeamData)
+    console.log(dayOfWeek)
+  },
+  [dayOfWeek]
+)
 
 
   const getScreen = () =>{
