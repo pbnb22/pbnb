@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {StyleSheet,View, Text, Image, TouchableOpacity, DatePickerIOSComponent} from 'react-native';
 
-export const MainScreen = () => {
+export const MainScreen = (props) => {
   const [breakfastStatus, setBreakfastStatus] = useState(false);
   const [lunchStauts, setLunchStatus] = useState(false);
   const [dinnerStatus, setDinnerStatus] = useState(false);
@@ -140,12 +140,12 @@ export const MainScreen = () => {
       <View style = {styles.tabcontainer}>
         <View style={styles.pbnb}>
           <Text style={{fontSize: 16}}>
-            빠밥
+            {props.pbnbData}
           </Text>
         </View>
         <View>
           <Text style={{fontSize: 16}}>
-            연료전지제어개발1팀
+          {props.TeamLabel}
           </Text>
         </View>
         <TouchableOpacity style={{marginLeft:'auto',flexDirection: 'row', justifyContent:'flex-end', marginRight:20}}>
@@ -202,6 +202,13 @@ export const MainScreen = () => {
           breakfastStatus ? breakfastscreen() : lunchStauts ? lunchscreen() : dinnerScreen()
         }
       </View>
+      <TouchableOpacity
+      onPress={props.ResetTeamData}
+      >
+        <Text>
+          테스트용 - 팀 리셋
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 };
