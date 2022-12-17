@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {StyleSheet,View, Text, Image, TouchableOpacity, DatePickerIOSComponent} from 'react-native';
 
-export const App = () => {
+export const MainScreen = () => {
   const [breakfastStatus, setBreakfastStatus] = useState(false);
   const [lunchStauts, setLunchStatus] = useState(false);
   const [dinnerStatus, setDinnerStatus] = useState(false);
@@ -61,72 +61,39 @@ export const App = () => {
   }
 
   const breakfasttab = () => {
-    if (breakfastStatus == true)
-    {
-      return(
-        <View style={{backgroundColor:'blue'}}>
-          <Text>
-            조식
-          </Text>
-        </View>
-      )
-    }
-    else
-    {
-      return(
-        <View>
-          <Text>
-            조식
-          </Text>
-        </View>
-      )
-    }
+    return(
+      <View style={[breakfastStatus === true ? {backgroundColor:'blue'} : {backgroundColor:'white'}]}>
+        <Text>
+          조식
+        </Text>
+      </View>
+    )
   }
 
   const lunchtab = () => {
-    if (lunchStauts == true)
-    {
+
       return(
-        <View style={{backgroundColor:'blue'}}>
+        <View style={[lunchStauts === true ? {backgroundColor:'blue'} : {backgroundColor:'white'}]}>
           <Text>
             중식
           </Text>
         </View>
       )
-    }
-    else
-    {
-      return(
-        <View>
-          <Text>
-            중식
-          </Text>
-        </View>
-      )
-    }
+    
+
   }
 
   const dinnertab = () => {
-    if (dinnerStatus == true)
-    {
+
       return(
-        <View style={{backgroundColor:'blue'}}>
+        <View style={[dinnerStatus === true ? {backgroundColor:'blue'} : {backgroundColor:'white'}]}>
           <Text>
             석식
           </Text>
         </View>
       )
-    }
-    else
-    {
-      return(
-        <View>
-          <Text>
-            석식
-          </Text>
-        </View>
-      )
-    }
+    
+
   }
 
   const breakfastscreen = () => {
@@ -183,7 +150,7 @@ export const App = () => {
         </View>
         <TouchableOpacity style={{marginLeft:'auto',flexDirection: 'row', justifyContent:'flex-end', marginRight:20}}>
           <Image
-            source={require('./src/assets/setting.png')}
+            source={require('./assets/setting.png')}
             style={{width: 25, height: 25}}
             resizeMode='contain'
           />
@@ -192,7 +159,7 @@ export const App = () => {
       <View style={styles.itemcontainer}> 
         <TouchableOpacity style={{margin: 5}} onPress={beforeDate}>
           <Image
-            source={require('./src/assets/left_arrow.png')}
+            source={require('./assets/left_arrow.png')}
             style={{width: 25, height: 25}}
             resizeMode='contain'
           />
@@ -204,14 +171,14 @@ export const App = () => {
         </View>
         <TouchableOpacity style={{margin: 5}}>
           <Image
-            source={require('./src/assets/calendar.png')}
+            source={require('./assets/calendar.png')}
             style={{width: 25, height: 25}}
             resizeMode='contain'
           />
         </TouchableOpacity>
         <TouchableOpacity style={{margin: 5}} onPress={nextDate}>
           <Image
-              source={require('./src/assets/right_arrow.png')}
+              source={require('./assets/right_arrow.png')}
               style={{width: 25, height: 25}}
               resizeMode='contain'
           />
@@ -304,5 +271,3 @@ const styles = StyleSheet.create({
     },
     
 })
-
-export default App;

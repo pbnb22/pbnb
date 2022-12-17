@@ -4,6 +4,7 @@ import { SplashScreen } from './src/SplashScreen';
 import { SignInScreen } from './src/SignInScreen';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from 'axios'; //For pbnb API Test
+import { MainScreen } from './src/MainScreen';
 
 export const App = () => {
   const [ShowSplashScreen, setShowSplashScreen] = useState(true);
@@ -63,11 +64,7 @@ export const App = () => {
       {
         getPbnbState(TeamData);
         return(
-          <View>
-            <Text>
-              {pbnbData}
-            </Text>
-          </View>
+          <MainScreen/>
         )
       }
       else{
