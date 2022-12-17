@@ -9,7 +9,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 export const App = () => {
   const [ShowSplashScreen, setShowSplashScreen] = useState(true);
-  const [dayOfWeek, setdayOfWeek] = useState(null);
+  const [TrgtDate, setTrgtDate] = useState(new Date());
   const [pbnbData, setpbnbData] = useState(null);
   const [TrgtTeamData, setTrgtTeamData] = useState(null);
   const [TrgtTeamLabelData, setTrgtTeamLabelData] = useState(null);
@@ -17,21 +17,22 @@ export const App = () => {
     {label: '연료전지제어개발1팀', value: 'FCCD'},
     {label: '연료전지제어개발2팀', value: 'FCCF'},
   ]);
-
+  const week_en = ['sun','mon','tue','wed','thu','fri','sat'];
   /*빠밥늦밥 정보 얻기 */
   const getPbnbState = async (TeamData) => {
-    if(dayOfWeek !== null && TeamData !== null){
+    if(TeamData !== null){
+      console.log('API : '+ TeamData," ",week_en[TrgtDate.getDay()]," ",TrgtDate.getMonth()+1)
       const response = await axios.get(
         'https://asia-northeast1-beme-55b97.cloudfunctions.net/getPbnb/',
         {
           params: {
             team : TeamData,
-            dayOfWeek : dayOfWeek //요일 요청해야함. 월마다 바뀌는건 Server에서 처리함.
+            dayOfWeek : week_en[TrgtDate.getDay()], //요일 요청해야함. 월마다 바뀌는건 Server에서 처리함.
+            month : TrgtDate.getMonth()+1,
           }
         }
       )
       setpbnbData(response.data.status);
-      console.log(pbnbData)
     }
   };
 
@@ -42,6 +43,7 @@ export const App = () => {
         let res = Teamitems.filter(it => it.value.includes(TeamSelected));
         await setTrgtTeamLabelData(res[0].label); //useState TeamTrgtLabel Setting
         await AsyncStorage.setItem("StoragedTeamData", TeamSelected); //Local Storage 저장
+        getPbnbState(TeamSelected);
       }
     }
 
@@ -54,7 +56,6 @@ export const App = () => {
       if(storageTeamData) {
         console.log("GET Team data from storage");
         onSetTeam(storageTeamData);
-        getPbnbState(storageTeamData);
       }
       else{
         console.log("Team Information is not saved");
@@ -62,7 +63,8 @@ export const App = () => {
       }
       console.log('초기 Team Data Get : '+storageTeamData);
     }
-    getTeamData();   
+    getTeamData();
+    targetDate= new Date();
   },
   []
 );
@@ -70,11 +72,9 @@ export const App = () => {
 useEffect(
   ()=>{
     getPbnbState(TrgtTeamData)
-    console.log(dayOfWeek)
   },
-  [dayOfWeek]
+  [week_en[TrgtDate.getDay()]]
 )
-
 
   const getScreen = () =>{
     if(ShowSplashScreen === true){
@@ -91,7 +91,7 @@ useEffect(
           onSetTeam = {onSetTeam}
           Teamitems = {Teamitems} 
           setTeamitems = {setTeamitems}
-          setdayOfWeek = {setdayOfWeek} // 요일을 주세요
+          setTrgtDate = {setTrgtDate}
           />
         )
       }
