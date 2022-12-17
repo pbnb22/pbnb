@@ -118,13 +118,17 @@ export const MainScreen = (props) => {
 
   return(
     <View style = {styles.maincontainer}>
-      <View style = {styles.tabcontainer}>
+      <View style = {styles.container_topbar}>
         <View style={styles.pbnb}>
-          <Text style={{fontSize: 16}}>
+          <Text 
+          style={{fontSize: 16, textAlign: 'center'}}
+          >
             {props.pbnbData}
           </Text>
         </View>
-        <View>
+        <View
+        style ={{marginLeft: 25,}}
+        >
           <Text style={{fontSize: 16}}>
           {props.TeamLabel}
           </Text>
@@ -240,19 +244,18 @@ const styles = StyleSheet.create({
       width: '100%',
       height: '100%',
     },
-    tabcontainer: {
-      marginTop: 30,
+    container_topbar: {
       flexDirection: "row",
-      // justifyContent:"space-between",
       alignItems: 'center',
+      justifyContent: 'flex-start',
       borderBottomColor: "#bdbdbd",
       borderBottomWidth: 1,
       width:'100%',
-      //backgroundColor: "blue"
+      height: 60,
     },
     itemcontainer: {
       // backgroundColor: 'blue',
-      margin: 20,
+      margin: 15,
       flexDirection: "row",
       justifyContent:"space-between",
       alignItems: 'center',
@@ -262,12 +265,8 @@ const styles = StyleSheet.create({
       borderRadius:15,
       width: 60,
       height:30,
-      paddingTop: 8,
-      paddingEnd: 8,
-      paddingRight: 12,
-      paddingLeft: 18,
-      margin: 20,
-      // marginLeft: 20,
+      justifyContent: 'center',
+      marginLeft: 20,
     },
     eattingtab: {
       backgroundColor: '#EAE8E8',
