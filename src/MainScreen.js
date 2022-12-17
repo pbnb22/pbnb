@@ -77,36 +77,6 @@ export const MainScreen = (props) => {
     console.log("dinner")
   }
 
-  const breakfasttab = () => {
-    return(
-      <View style={[breakfastStatus === true ? {backgroundColor:'blue'} : {backgroundColor:'white'}]}>
-        <Text>
-          조식
-        </Text>
-      </View>
-    )
-  }
-
-  const lunchtab = () => {
-      return(
-        <View style={[lunchStauts === true ? {backgroundColor:'blue'} : {backgroundColor:'white'}]}>
-          <Text>
-            중식
-          </Text>
-        </View>
-      )
-  }
-
-  const dinnertab = () => {
-      return(
-        <View style={[dinnerStatus === true ? {backgroundColor:'blue'} : {backgroundColor:'white'}]}>
-          <Text>
-            석식
-          </Text>
-        </View>
-      )
-  }
-
   const breakfastscreen = () => {
     if (breakfastStatus === true)
     {
@@ -200,16 +170,33 @@ export const MainScreen = (props) => {
           />
         </TouchableOpacity>
       </View>
-
       <View style={styles.eattingtab}>
-        <TouchableOpacity style={styles.eattingtime_noclick} onPress={breakfast}>
-          {breakfasttab()}
+        <TouchableOpacity 
+        style={[breakfastStatus === true ? styles.eattingtime_click : styles.eattingtime_noclick]} 
+        onPress={breakfast}>
+          <View>
+            <Text>
+              조식
+            </Text>
+          </View>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.eattingtime_noclick} onPress={lunch}>
-          {lunchtab()}
+        <TouchableOpacity 
+        style={[lunchStauts === true ? styles.eattingtime_click : styles.eattingtime_noclick]} 
+        onPress={lunch}>
+          <View>
+            <Text>
+              중식
+            </Text>
+          </View>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.eattingtime_noclick} onPress={dinner}>
-          {dinnertab()}
+        <TouchableOpacity 
+        style={[dinnerStatus === true ? styles.eattingtime_click : styles.eattingtime_noclick]} 
+        onPress={dinner}>
+          <View>
+            <Text>
+              석식
+            </Text>
+          </View>
         </TouchableOpacity>
       </View>
 
@@ -283,25 +270,28 @@ const styles = StyleSheet.create({
       // marginLeft: 20,
     },
     eattingtab: {
-      // backgroundColor:"#bdbdbd",
-      borderColor: 'black',
-      borderWidth: 2, 
-      width:'78%',
-      height:'4%',
-      borderRadius:5, 
+      backgroundColor: '#EAE8E8',
+      height: 30,
+      borderRadius:15, 
+      marginLeft: 30,
+      marginRight: 40,
       flexDirection: "row", 
       justifyContent:"space-between"
     },
     eattingtime_click: {
       width: '33%',
-      backgroundColor: 'black',
+      margin: 5,
+      borderRadius:5,
+      backgroundColor: 'white',
       flexDirection: 'column',
       justifyContent: 'center',
       alignItems: 'center',
     },
     eattingtime_noclick: {
       width: '33%',
-      // backgroundColor: 'black',
+      margin: 4,
+      borderRadius:5,
+      backgroundColor: '#EAE8E8',
       flexDirection: 'column',
       justifyContent: 'center',
       alignItems: 'center',
