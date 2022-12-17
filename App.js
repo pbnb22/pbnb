@@ -9,60 +9,64 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 export const App = () => {
   const [ShowSplashScreen, setShowSplashScreen] = useState(true);
+  const [dayOfWeek, setdayOfWeek] = useState(null);
   const [pbnbData, setpbnbData] = useState(null);
-  const [TeamData, setTeamData] = useState(null);
-  const [TeamLabelData, setTeamLabelData] = useState(null);
+  const [TrgtTeamData, setTrgtTeamData] = useState(null);
+  const [TrgtTeamLabelData, setTrgtTeamLabelData] = useState(null);
   const [Teamitems, setTeamitems] = useState([
     {label: '연료전지제어개발1팀', value: 'FCCD'},
     {label: '연료전지제어개발2팀', value: 'FCCF'},
   ]);
 
+  /*빠밥늦밥 정보 얻기 */
   const getPbnbState = async (TeamData) => {
-    const response = await axios.get(
-      'https://asia-northeast1-beme-55b97.cloudfunctions.net/getPbnb/',
-      {
-        params: {
-          team : TeamData
+    if(dayOfWeek !== null && TeamData !== null){
+      const response = await axios.get(
+        'https://asia-northeast1-beme-55b97.cloudfunctions.net/getPbnb/',
+        {
+          params: {
+            team : TeamData,
+            dayOfWeek : dayOfWeek //요일 요청해야함. 월마다 바뀌는건 Server에서 처리함.
+          }
         }
-      }
-    )
-    setpbnbData(response.data.status);
+      )
+      setpbnbData(response.data.status);
+      console.log(pbnbData)
+    }
   };
 
-  const onSetTeamData = async (TeamData) => {
-    await setTeamData(TeamData);
-    let res = Teamitems.filter(it => it.value.includes(TeamData));
-    console.log(res[0].label);
-    await setTeamLabelData(res[0].label);
-    await getPbnbState(TeamData);
-  }
-
-  const onSetTeam = async (TeamSelected) => {
-    if(TeamSelected !== null){
-      onSetTeamData(TeamSelected);
-      await AsyncStorage.setItem("TeamData", TeamSelected);
-    }
-  }
-  
-  useEffect( //초기 실행시 2초간 SplashScreen 수행 후 Local Storage에 저장된 Team Data Get
-    ()=>{
-      setTimeout(()=>{setShowSplashScreen(false)}, 2000); // 2s후 ShowSplashScreen을 True로 Set
-      const getTeamData = async () => {
-        const storageTeamData = await AsyncStorage.getItem("TeamData");
-        if(storageTeamData) {
-          console.log("GET Team data from storage");
-          onSetTeamData(storageTeamData);
-        }
-        else{
-          console.log("Team Information is not saved");
-          
-        }
-        console.log('초기 Team Data Get : '+storageTeamData);
+    /*Team Setting */
+    const onSetTeam = async (TeamSelected) => { //useState 저장 (Team Value, Label) -> Pbnb 상태 얻기
+      if(TeamSelected !== null){
+        await setTrgtTeamData(TeamSelected); //useState TeamTrgtData Setting
+        let res = Teamitems.filter(it => it.value.includes(TeamSelected));
+        await setTrgtTeamLabelData(res[0].label); //useState TeamTrgtLabel Setting
+        await getPbnbState(TeamSelected);
+        await AsyncStorage.setItem("StoragedTeamData", TeamSelected); //Local Storage 저장
       }
-      getTeamData();   
-    },
-    []
-  );
+    }
+
+  /* Initial Process */
+  useEffect( //초기 실행시 2초간 SplashScreen 수행 후 Local Storage에 저장된 Team Data Get
+  ()=>{
+    setTimeout(()=>{setShowSplashScreen(false)}, 2000); // 2s후 ShowSplashScreen을 True로 Set
+    const getTeamData = async () => {
+      const storageTeamData = await AsyncStorage.getItem("StoragedTeamData");
+      if(storageTeamData) {
+        console.log("GET Team data from storage");
+        onSetTeam(storageTeamData);
+      }
+      else{
+        console.log("Team Information is not saved");
+        
+      }
+      console.log('초기 Team Data Get : '+storageTeamData);
+    }
+    getTeamData();   
+  },
+  []
+);
+
 
   const getScreen = () =>{
     if(ShowSplashScreen === true){
@@ -70,16 +74,17 @@ export const App = () => {
         <SplashScreen/>
       )
     } else{
-      if(TeamData !== null)
+      if(TrgtTeamData !== null)
       {
         return(
           <MainScreen 
-          TeamLabel = {TeamLabelData} 
-          TeamValue = {TeamData} 
+          TrgtTeamLabelData = {TrgtTeamLabelData} 
           pbnbData = {pbnbData} 
           onSetTeam = {onSetTeam}
           Teamitems = {Teamitems} 
-          setTeamitems = {setTeamitems}/>
+          setTeamitems = {setTeamitems}
+          setdayOfWeek = {setdayOfWeek} // 요일을 주세요
+          />
         )
       }
       else{

@@ -18,7 +18,21 @@ export const MainScreen = (props) => {
   const week = ['일','월','화','수','목','금','토'];
   const [targetDate, setTargetDate] = useState(new Date());
 
-  //backSheet
+  useEffect(() => {
+    var hours = targetDate.getHours();
+    
+    if (hours < 8){
+      setBreakfastStatus(true);
+    }
+    else if (hours < 13){
+      setLunchStatus(true);
+    }
+    else{
+      setDinnerStatus(true);
+    }
+  },[]);
+
+  /*BottomSheet Function*/
   const bottomSheetModalRef = useRef(null);
   const snapPoints = useMemo(() => ['25%', '50%'], []);
   const handlePresentModalPress = useCallback(() => {
@@ -41,6 +55,9 @@ export const MainScreen = (props) => {
     [],
   );
   const handleClosePress = () => bottomSheetModalRef.current.close()
+  ////
+
+  /*Team 변경 함수 */
   const TeamStateChange = () => {
     if(value !== null)
     {
@@ -48,21 +65,7 @@ export const MainScreen = (props) => {
       handleClosePress();
     }
   }
-
-  useEffect(() => {
-    var hours = targetDate.getHours();
-    
-    if (hours < 8){
-      setBreakfastStatus(true);
-    }
-    else if (hours < 13){
-      setLunchStatus(true);
-    }
-    else{
-      setDinnerStatus(true);
-    }
-  },[]);
-
+  //
   const beforeDate = () => {
     const newDate = new Date(targetDate);
     newDate.setDate(targetDate.getDate() - 1);
@@ -142,9 +145,13 @@ export const MainScreen = (props) => {
   return(
     <View style = {styles.maincontainer}>
       <View style = {styles.container_topbar}>
-        <View style={styles.pbnb}>
+        <View style={[styles.pbnb, 
+          props.pbnbData == '빠밥' ? {backgroundColor: 'blue'} : 
+          props.pbnbData == '늦밥' ? {backgroundColor: '#FFAA2C'} :
+          {backgroundColor: 'red'}
+          ]}>
           <Text 
-          style={{fontSize: 16, textAlign: 'center'}}
+          style={{fontSize: 16, textAlign: 'center', color: 'white'}}
           >
             {props.pbnbData}
           </Text>
@@ -153,7 +160,7 @@ export const MainScreen = (props) => {
         style ={{marginLeft: 30,}}
         >
           <Text style={{fontSize: 17}}>
-          {props.TeamLabel}
+          {props.TrgtTeamLabelData}
           </Text>
         </View>
         <TouchableOpacity 
@@ -300,7 +307,7 @@ const styles = StyleSheet.create({
       alignItems: 'center',
     },
     pbnb: {
-      backgroundColor:'#01a9f4',
+      //backgroundColor:'#01a9f4',
       borderRadius:15,
       width: 50,
       height:30,
