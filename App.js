@@ -17,9 +17,6 @@ export const App = () => {
     {label: '연료전지제어개발2팀', value: 'FCCF'},
   ]);
 
-  const ResetTeamData = () => {
-    setTeamData(null);
-  }
   const getPbnbState = async (TeamData) => {
     const response = await axios.get(
       'https://asia-northeast1-beme-55b97.cloudfunctions.net/getPbnb/',
@@ -76,7 +73,13 @@ export const App = () => {
       if(TeamData !== null)
       {
         return(
-          <MainScreen TeamLabel = {TeamLabelData} TeamValue = {TeamData} pbnbData = {pbnbData} ResetTeamData = {ResetTeamData}/>
+          <MainScreen 
+          TeamLabel = {TeamLabelData} 
+          TeamValue = {TeamData} 
+          pbnbData = {pbnbData} 
+          onSetTeam = {onSetTeam}
+          Teamitems = {Teamitems} 
+          setTeamitems = {setTeamitems}/>
         )
       }
       else{

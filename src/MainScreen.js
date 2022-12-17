@@ -8,6 +8,9 @@ import {
 import DropDownPicker from 'react-native-dropdown-picker';
 
 export const MainScreen = (props) => {
+  const [open, setOpen] = useState(false)
+  const [value, setValue] = useState(null);
+
   const [breakfastStatus, setBreakfastStatus] = useState(false);
   const [lunchStauts, setLunchStatus] = useState(false);
   const [dinnerStatus, setDinnerStatus] = useState(false);
@@ -25,6 +28,26 @@ export const MainScreen = (props) => {
     console.log('handleSheetChanges', index);
   }, []);
 
+  const renderBackdrop = useCallback(
+    props => (
+      <BottomSheetBackdrop
+        {...props}
+        pressBehavior="close"
+        appearsOnIndex={0}		// 이거 추가
+        disappearsOnIndex={-1}	// 이거 추가
+        opacity={0.7}
+      />
+    ),
+    [],
+  );
+  const handleClosePress = () => bottomSheetModalRef.current.close()
+  const TeamStateChange = () => {
+    if(value !== null)
+    {
+      props.onSetTeam(value);
+      handleClosePress();
+    }
+  }
 
   useEffect(() => {
     var hours = targetDate.getHours();
@@ -127,9 +150,9 @@ export const MainScreen = (props) => {
           </Text>
         </View>
         <View
-        style ={{marginLeft: 25,}}
+        style ={{marginLeft: 30,}}
         >
-          <Text style={{fontSize: 16}}>
+          <Text style={{fontSize: 17}}>
           {props.TeamLabel}
           </Text>
         </View>
@@ -139,7 +162,7 @@ export const MainScreen = (props) => {
         >
           <Image
             source={require('./assets/setting.png')}
-            style={{width: 25, height: 25}}
+            style={{width: 23, height: 23}}
             resizeMode='contain'
           />
         </TouchableOpacity>
@@ -209,27 +232,43 @@ export const MainScreen = (props) => {
           breakfastStatus ? breakfastscreen() : lunchStauts ? lunchscreen() : dinnerScreen()
         }
       </View>
-      <TouchableOpacity
-      onPress={props.ResetTeamData}
-      >
-        <Text>
-          테스트용 - 팀 리셋
-        </Text>
-      </TouchableOpacity>
       <BottomSheetModalProvider>
-            <View style={{flex:1, justifyContent: 'center'}}>
-                <BottomSheetModal
-                ref={bottomSheetModalRef}
-                index={1}
-                snapPoints={snapPoints}
-                onChange={handleSheetChanges}
+        <View style={{flex:1, justifyContent: 'center'}}>
+          <BottomSheetModal
+            ref={bottomSheetModalRef}
+            index={1}
+            snapPoints={snapPoints}
+            onChange={handleSheetChanges}
+            backdropComponent={renderBackdrop}
+          >
+            <View style={{flex:1, alignItems: 'center', marginTop: 10, justifyContent: 'flex-start'}}>
+              <View>
+                <Text>팀을 변경하고 싶으세요??</Text>
+              </View>
+              <View style ={{marginTop: 20, width: 300}}>
+                <DropDownPicker
+                placeholder="팀을 선택해주세요"
+                open={open}
+                value={value}
+                items={props.Teamitems}
+                setOpen={setOpen}
+                setValue={setValue}
+                setItems={props.setTeamitems}
+                maxHeight={100}
+                />
+                <TouchableOpacity 
+                style ={styles.confirm}
+                onPress ={TeamStateChange}
                 >
-                <View style={{flex:1, alignItems: 'center'}}>
-                    <Text>팀을 변경하고 싶으세요??</Text>
-                </View>
-                </BottomSheetModal>
+                    <Text style ={{color : 'white'}}>
+                        변경하기
+                    </Text>
+                </TouchableOpacity>   
+              </View>
             </View>
-        </BottomSheetModalProvider>
+            </BottomSheetModal>
+        </View>
+      </BottomSheetModalProvider>
     </View>
   );
 };
@@ -263,7 +302,7 @@ const styles = StyleSheet.create({
     pbnb: {
       backgroundColor:'#01a9f4',
       borderRadius:15,
-      width: 60,
+      width: 50,
       height:30,
       justifyContent: 'center',
       marginLeft: 20,
@@ -295,5 +334,17 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
       alignItems: 'center',
     },
-    
+    confirm: {
+      
+      justifyContent: 'flex-start',
+      alignItems: 'center',
+
+      marginTop: 130,
+      marginLeft: 30,
+      marginRight: 30,
+      paddingTop: 15,
+      paddingBottom: 15,
+      borderRadius: 25,
+      backgroundColor: 'black',
+  }
 })
