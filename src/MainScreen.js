@@ -15,7 +15,7 @@ export const MainScreen = (props) => {
     if (hours < 8){
       setBreakfastStatus(true);
     }
-    else if (hours < 12){
+    else if (hours < 13){
       setLunchStatus(true);
     }
     else{
