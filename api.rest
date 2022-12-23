@@ -3,8 +3,8 @@ POST https://asia-northeast1-pbnb-2f164.cloudfunctions.net/menu_v_2_0_0
 Content-Type: application/json
 
     {
-        "st_dt": "20221215",
-        "end_dt": "20221215",
+        "st_dt": "20221107",
+        "end_dt": "20221107",
         "bizplc_cd": "10095"
     }
 

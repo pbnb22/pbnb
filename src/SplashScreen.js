@@ -7,7 +7,7 @@ export const SplashScreen = () => {
             <View>
                 <Image source={require('./assets/pbnb_logo.png')} style={styles.image_logo}/>
             </View>
-            <View style={{margin :10}}>
+            <View style={{margin :15}}>
                 <Text style={styles.text_logo}>
                     빠밥늦밥
                 </Text>
@@ -26,15 +26,16 @@ const styles = StyleSheet.create({
     },
 
     image_logo: {
-        width: 60,
-        height: 60,
+        width: 120,
+        height: 120,
         resizeMode: 'contain',
     },
 
     text_logo: {
         color: '#212614',
-        fontSize: 15,
+        fontSize: 25,
         textAlign: 'center',
+        fontFamily: 'BMDoHyeon',
         
     }
 })
