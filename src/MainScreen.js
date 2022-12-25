@@ -80,7 +80,7 @@ export const MainScreen = (props) => {
         getMenuApi(format((+newDate), 'yyyyMMdd'))
       }
     }
-    else{ //day의 날짜에 따라 TrgtDate 기준으로 날짜 이동해요
+    else{ //day의 날짜에 따라 TrgtDate 기준으로 날짜
       newDate.setDate(props.TrgtDate.getDate() + day);
       props.setTrgtDate(newDate);
       getMenuApi(format((+newDate), 'yyyyMMdd'))
@@ -166,15 +166,15 @@ export const MainScreen = (props) => {
     }
     else {
       return(
-        <View style={{width:'100%', height:'35%', marginTop:180}}>
-          <View style={{height:'80%'}}>
+        <View style={{width:'100%', height:100, marginTop:180}}>
+          <View style={{width:'100%', height: '100%', flex: 2}}>
             <Image
               source={require('./assets/no_menu.png')}
               style={{width: '100%', height: '100%'}}
               resizeMode='contain'
             />
           </View>
-          <View style={{alignItems:'center', margin:20 }}>
+          <View style={{width:'100%', height: '100%', alignItems:'center',  flex : 1, marginTop: 10}}>
             <Text style={{fontSize: 16}}>
               메뉴가 없어요.
             </Text>
