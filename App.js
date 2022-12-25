@@ -87,6 +87,7 @@ export const App = () => {
           Teamitems = {Teamitems} 
           setTeamitems = {setTeamitems}
           setTrgtDate = {setTrgtDate}
+          TrgtDate = {TrgtDate}
           />
         )
       }

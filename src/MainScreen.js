@@ -18,7 +18,6 @@ export const MainScreen = (props) => {
   const [dinnerStatus, setDinnerStatus] = useState(false);
 
   const week = ['일','월','화','수','목','금','토'];
-  const [targetDate, setTargetDate] = useState(new Date());
 
   const [menulist, setMenulist] = useState(null);
   const [eatTime, setEatTime] = useState(null);
@@ -27,9 +26,9 @@ export const MainScreen = (props) => {
 
   /* 화면 호출 시 현재 시간에 따른 식사 표기 */
   useEffect(() => {
-    const newDate = new Date(targetDate);
+    const newDate = new Date(props.TrgtDate);
     getMenuApi(format((+newDate), 'yyyyMMdd')); // 첫 메뉴는 현재 시간 기준 표기
-    eat_hours(targetDate.getHours()); // 식사 시간 기준으로 메뉴 (탭) 결정
+    eat_hours(props.TrgtDate.getHours()); // 식사 시간 기준으로 메뉴 (탭) 결정
   },[]);
 
   /* 시간에 따른 메뉴 결정 */
@@ -72,31 +71,28 @@ export const MainScreen = (props) => {
   }
 
   /* 하루 전날 전체 메뉴 확인 */
-  const beforeDate = async () => {
-    const newDate = new Date(targetDate);
-    newDate.setDate(targetDate.getDate() - 1);
-    setTargetDate(newDate);
-    await props.setTrgtDate(newDate); 
+  const beforeDate = () => {
+    const newDate = new Date(props.TrgtDate);
+    newDate.setDate(props.TrgtDate.getDate() - 1);
+    props.setTrgtDate(newDate); 
     getMenuApi(format((+newDate), 'yyyyMMdd'));
   };
   
   /* 오늘 전체 메뉴 확인 */
-  const todayDate = async () => {
+  const todayDate = () => {
     const newDate = new Date();
-    if (newDate.getFullYear() !== targetDate.getFullYear() || newDate.getMonth() !== targetDate.getMonth() || newDate.getDate() !== targetDate.getDate()){ 
+    if (newDate.getFullYear() !== props.TrgtDate.getFullYear() || newDate.getMonth() !== props.TrgtDate.getMonth() || newDate.getDate() !== props.TrgtDate.getDate()){ 
       console.log("here")
-      setTargetDate(newDate);
-      await props.setTrgtDate(newDate);
+      props.setTrgtDate(newDate);
       getMenuApi(format((+newDate), 'yyyyMMdd'));
     }
   };
 
   /* 하루 다음날 전체 메뉴 확인 */
-  const nextDate = async () => {
-    const newDate = new Date(targetDate);
-    newDate.setDate(targetDate.getDate() + 1);
-    setTargetDate(newDate);
-    await props.setTrgtDate(newDate);
+  const nextDate = () => {
+    const newDate = new Date(props.TrgtDate);
+    newDate.setDate(props.TrgtDate.getDate() + 1);
+    props.setTrgtDate(newDate);
     getMenuApi(format((+newDate), 'yyyyMMdd'))
   };
  
@@ -241,7 +237,7 @@ export const MainScreen = (props) => {
           </TouchableOpacity>
           <View style={{margin: 5}}>
             <Text style={{fontSize:16}}>
-              {targetDate.getFullYear() + '년 ' + (targetDate.getMonth()+1) + '월 ' + targetDate.getDate() + '일 ' + week[targetDate.getDay()] + '요일'}
+              {props.TrgtDate.getFullYear() + '년 ' + (props.TrgtDate.getMonth()+1) + '월 ' + props.TrgtDate.getDate() + '일 ' + week[props.TrgtDate.getDay()] + '요일'}
             </Text>
             <TouchableOpacity style={{alignItems:'center', margin: 5}} onPress={todayDate}>
               <Text style={{textDecorationLine: 'underline'}}>
