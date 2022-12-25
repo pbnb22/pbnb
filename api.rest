@@ -1,0 +1,20 @@
+###
+POST https://asia-northeast1-pbnb-2f164.cloudfunctions.net/menu_v_2_0_0
+Content-Type: application/json
+
+    {
+        "st_dt": "20221107",
+        "end_dt": "20221107",
+        "bizplc_cd": "10095"
+    }
+
+### 문제가 된 요청 
+
+POST http://127.0.0.1:5001/pbnb-2f164/asia-northeast1/menu_v_2_0_0 
+Content-Type: application/json
+{
+"st_dt": "20221130", "end_dt": "20221130", "bizplc_cd": "10095"
+}
+
+###
+GET https://asia-northeast1-beme-55b97.cloudfunctions.net/getPbnb/?team=FCCF

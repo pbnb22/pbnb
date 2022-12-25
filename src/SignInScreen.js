@@ -18,8 +18,8 @@ export const SignInScreen = (props) => {
                 <View style = {{marginTop : 50}}>
                     <Image source={require('./assets/pbnb_logo.png')} style={styles.image_logo}/>
                 </View>
-                <View >
-                    <Text style ={{textAlign:'center', fontSize : 25, color: 'black', marginTop: 5}}> 
+                <View style={{margin :15}}>
+                    <Text style ={{textAlign:'center', fontSize : 25, color: 'black', marginTop: 5, fontFamily: 'BMDoHyeon'}}> 
                         빠밥늦밥
                     </Text>
                 </View>
@@ -83,8 +83,8 @@ const styles = StyleSheet.create({
     },
 
     image_logo: {
-        width: 75,
-        height: 75,
+        width: 120,
+        height: 120,
         resizeMode: 'contain',
     },
 
@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
       
         justifyContent: 'flex-start',
         alignItems: 'center',
-
+        width: 250,
         paddingTop: 15,
         paddingBottom: 15,
         paddingLeft: 100,
