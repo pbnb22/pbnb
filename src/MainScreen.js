@@ -13,10 +13,6 @@ export const MainScreen = (props) => {
   const [open, setOpen] = useState(false); 
   const [value, setValue] = useState(null);
 
-  const [breakfastStatus, setBreakfastStatus] = useState(false);
-  const [lunchStauts, setLunchStatus] = useState(false);
-  const [dinnerStatus, setDinnerStatus] = useState(false);
-
   const week = ['일','월','화','수','목','금','토'];
 
   const [menulist, setMenulist] = useState(null);
@@ -89,25 +85,16 @@ export const MainScreen = (props) => {
  
   /* 전체 메뉴 중 아침 메뉴 확인 */
   const breakfast = () => {
-    setBreakfastStatus(true);
-    setLunchStatus(false);
-    setDinnerStatus(false);
     setEatTime('breakfirstList')
   }
 
   /* 전체 메뉴 중 점심 메뉴 확인 */
   const lunch = () => {
-    setBreakfastStatus(false);
-    setLunchStatus(true);
-    setDinnerStatus(false);
     setEatTime('lunchList');
   }
 
   /* 전체 메뉴 중 저녁 메뉴 확인 */
   const dinner = () => {
-    setBreakfastStatus(false);
-    setLunchStatus(false);
-    setDinnerStatus(true);
     setEatTime('dinnerList');
   }
 
@@ -248,7 +235,7 @@ export const MainScreen = (props) => {
         </View>
         <View style={styles.eattingtab}>
           <TouchableOpacity 
-          style={[breakfastStatus === true ? styles.eattingtime_click : styles.eattingtime_noclick]} 
+          style={[eatTime === 'breakfirstList' ? styles.eattingtime_click : styles.eattingtime_noclick]} 
           onPress={breakfast}>
             <View>
               <Text>
@@ -257,7 +244,7 @@ export const MainScreen = (props) => {
             </View>
           </TouchableOpacity>
           <TouchableOpacity 
-          style={[lunchStauts === true ? styles.eattingtime_click : styles.eattingtime_noclick]} 
+          style={[eatTime === 'lunchList' ? styles.eattingtime_click : styles.eattingtime_noclick]} 
           onPress={lunch}>
             <View>
               <Text>
@@ -266,7 +253,7 @@ export const MainScreen = (props) => {
             </View>
           </TouchableOpacity>
           <TouchableOpacity 
-          style={[dinnerStatus === true ? styles.eattingtime_click : styles.eattingtime_noclick]} 
+          style={[eatTime === 'dinnerList' ? styles.eattingtime_click : styles.eattingtime_noclick]} 
           onPress={dinner}>
             <View>
               <Text>
