@@ -18,7 +18,6 @@ export const MainScreen = (props) => {
   const [dinnerStatus, setDinnerStatus] = useState(false);
 
   const week = ['일','월','화','수','목','금','토'];
-  const [targetDate, setTargetDate] = useState(new Date());
 
   const [menulist, setMenulist] = useState(null);
   const [eatTime, setEatTime] = useState(null);
@@ -27,9 +26,9 @@ export const MainScreen = (props) => {
 
   /* 화면 호출 시 현재 시간에 따른 식사 표기 */
   useEffect(() => {
-    const newDate = new Date(targetDate);
+    const newDate = new Date(props.TrgtDate);
     getMenuApi(format((+newDate), 'yyyyMMdd')); // 첫 메뉴는 현재 시간 기준 표기
-    eat_hours(targetDate.getHours()); // 식사 시간 기준으로 메뉴 (탭) 결정
+    eat_hours(props.TrgtDate.getHours()); // 식사 시간 기준으로 메뉴 (탭) 결정
   },[]);
 
   /* 시간에 따른 메뉴 결정 */
@@ -71,34 +70,22 @@ export const MainScreen = (props) => {
     }
   }
 
-  /* 하루 전날 전체 메뉴 확인 */
-  const beforeDate = async () => {
-    const newDate = new Date(targetDate);
-    newDate.setDate(targetDate.getDate() - 1);
-    setTargetDate(newDate);
-    await props.setTrgtDate(newDate); 
-    getMenuApi(format((+newDate), 'yyyyMMdd'));
-  };
-  
-  /* 오늘 전체 메뉴 확인 */
-  const todayDate = async () => {
+  /*요일 변경 함수 => 0: Today */
+  const changeDate = (day) => {
     const newDate = new Date();
-    if (newDate.getFullYear() !== targetDate.getFullYear() || newDate.getMonth() !== targetDate.getMonth() || newDate.getDate() !== targetDate.getDate()){ 
-      console.log("here")
-      setTargetDate(newDate);
-      await props.setTrgtDate(newDate);
-      getMenuApi(format((+newDate), 'yyyyMMdd'));
+    if(day === 0){ //day 파라미타가 0으로 오면 오늘 날짜를 보여줘요
+      if (newDate.getFullYear() !== props.TrgtDate.getFullYear() || newDate.getMonth() !== props.TrgtDate.getMonth() || newDate.getDate() !== props.TrgtDate.getDate()){ 
+        console.log("Today Change Date");
+        props.setTrgtDate(newDate);
+        getMenuApi(format((+newDate), 'yyyyMMdd'))
+      }
     }
-  };
-
-  /* 하루 다음날 전체 메뉴 확인 */
-  const nextDate = async () => {
-    const newDate = new Date(targetDate);
-    newDate.setDate(targetDate.getDate() + 1);
-    setTargetDate(newDate);
-    await props.setTrgtDate(newDate);
-    getMenuApi(format((+newDate), 'yyyyMMdd'))
-  };
+    else{ //day의 날짜에 따라 TrgtDate 기준으로 날짜
+      newDate.setDate(props.TrgtDate.getDate() + day);
+      props.setTrgtDate(newDate);
+      getMenuApi(format((+newDate), 'yyyyMMdd'))
+    }
+  }
  
   /* 전체 메뉴 중 아침 메뉴 확인 */
   const breakfast = () => {
@@ -179,15 +166,15 @@ export const MainScreen = (props) => {
     }
     else {
       return(
-        <View style={{width:'100%', height:'35%', marginTop:180}}>
-          <View style={{height:'80%'}}>
+        <View style={{width:'100%', height:100, marginTop:180}}>
+          <View style={{width:'100%', height: '100%', flex: 2}}>
             <Image
               source={require('./assets/no_menu.png')}
               style={{width: '100%', height: '100%'}}
               resizeMode='contain'
             />
           </View>
-          <View style={{alignItems:'center', margin:20 }}>
+          <View style={{width:'100%', height: '100%', alignItems:'center',  flex : 1, marginTop: 10}}>
             <Text style={{fontSize: 16}}>
               메뉴가 없어요.
             </Text>
@@ -232,7 +219,7 @@ export const MainScreen = (props) => {
           </TouchableOpacity>
         </View>
         <View style={styles.itemcontainer}> 
-          <TouchableOpacity style={{margin: 5}} onPress={beforeDate}>
+          <TouchableOpacity style={{margin: 5}} onPress={()=>changeDate(-1)}>
             <Image
               source={require('./assets/left_arrow.png')}
               style={{width: 25, height: 25}}
@@ -241,9 +228,9 @@ export const MainScreen = (props) => {
           </TouchableOpacity>
           <View style={{margin: 5}}>
             <Text style={{fontSize:16}}>
-              {targetDate.getFullYear() + '년 ' + (targetDate.getMonth()+1) + '월 ' + targetDate.getDate() + '일 ' + week[targetDate.getDay()] + '요일'}
+              {props.TrgtDate.getFullYear() + '년 ' + (props.TrgtDate.getMonth()+1) + '월 ' + props.TrgtDate.getDate() + '일 ' + week[props.TrgtDate.getDay()] + '요일'}
             </Text>
-            <TouchableOpacity style={{alignItems:'center', margin: 5}} onPress={todayDate}>
+            <TouchableOpacity style={{alignItems:'center', margin: 5}} onPress={()=>changeDate(0)}>
               <Text style={{textDecorationLine: 'underline'}}>
                 오늘 메뉴 확인
               </Text>
@@ -251,7 +238,7 @@ export const MainScreen = (props) => {
           </View>
           <TouchableOpacity 
           style={{margin: 5}} 
-          onPress={nextDate}>
+          onPress={()=>changeDate(+1)}>
             <Image
                 source={require('./assets/right_arrow.png')}
                 style={{width: 25, height: 25}}
