@@ -28,10 +28,14 @@ export const MainScreen = (props) => {
     const newDate = new Date(props.TrgtDate);
     getMenuApi(format((+newDate), 'yyyyMMdd'), eatSite); // 첫 메뉴는 현재 시간 기준 표기
     eat_hours(props.TrgtDate.getHours()); // 식사 시간 기준으로 메뉴 (탭) 결정
-
     const storageSite = async () => {
       const initSite = await AsyncStorage.getItem("StoragedSite");
-      site(initSite);
+      if (initSite !== null){
+        site(initSite);
+      }
+      else{
+        site('10552');
+      }
     };
     storageSite();
   },[]);
