@@ -171,7 +171,6 @@ export const MainScreen = (props) => {
     }
   }
 
-
   return(
     /* 전체 화면 표기 부분 */
     <SafeAreaView>
