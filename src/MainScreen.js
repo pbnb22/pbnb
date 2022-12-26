@@ -13,23 +13,19 @@ export const MainScreen = (props) => {
   const [open, setOpen] = useState(false); 
   const [value, setValue] = useState(null);
 
-  const [breakfastStatus, setBreakfastStatus] = useState(false);
-  const [lunchStauts, setLunchStatus] = useState(false);
-  const [dinnerStatus, setDinnerStatus] = useState(false);
-
   const week = ['일','월','화','수','목','금','토'];
-  const [targetDate, setTargetDate] = useState(new Date());
 
   const [menulist, setMenulist] = useState(null);
   const [eatTime, setEatTime] = useState(null);
+  const [eatSite, setEatSite] = useState(null);
 
   const [loadingstate, setLoadingstate] = useState(false);
 
   /* 화면 호출 시 현재 시간에 따른 식사 표기 */
   useEffect(() => {
-    const newDate = new Date(targetDate);
+    const newDate = new Date(props.TrgtDate);
     getMenuApi(format((+newDate), 'yyyyMMdd')); // 첫 메뉴는 현재 시간 기준 표기
-    eat_hours(targetDate.getHours()); // 식사 시간 기준으로 메뉴 (탭) 결정
+    eat_hours(props.TrgtDate.getHours()); // 식사 시간 기준으로 메뉴 (탭) 결정
   },[]);
 
   /* 시간에 따른 메뉴 결정 */
@@ -71,57 +67,40 @@ export const MainScreen = (props) => {
     }
   }
 
-  /* 하루 전날 전체 메뉴 확인 */
-  const beforeDate = async () => {
-    const newDate = new Date(targetDate);
-    newDate.setDate(targetDate.getDate() - 1);
-    setTargetDate(newDate);
-    await props.setTrgtDate(newDate); 
-    getMenuApi(format((+newDate), 'yyyyMMdd'));
-  };
-  
-  /* 오늘 전체 메뉴 확인 */
-  const todayDate = async () => {
+  /*요일 변경 함수 => 0: Today */
+  const changeDate = (day) => {
     const newDate = new Date();
-    if (newDate.getFullYear() !== targetDate.getFullYear() || newDate.getMonth() !== targetDate.getMonth() || newDate.getDate() !== targetDate.getDate()){ 
-      console.log("here")
-      setTargetDate(newDate);
-      await props.setTrgtDate(newDate);
-      getMenuApi(format((+newDate), 'yyyyMMdd'));
+    if(day === 0){ //day 파라미타가 0으로 오면 오늘 날짜를 보여줘요
+      if (newDate.getFullYear() !== props.TrgtDate.getFullYear() || newDate.getMonth() !== props.TrgtDate.getMonth() || newDate.getDate() !== props.TrgtDate.getDate()){ 
+        console.log("Today Change Date");
+        props.setTrgtDate(newDate);
+        getMenuApi(format((+newDate), 'yyyyMMdd'))
+      }
     }
-  };
-
-  /* 하루 다음날 전체 메뉴 확인 */
-  const nextDate = async () => {
-    const newDate = new Date(targetDate);
-    newDate.setDate(targetDate.getDate() + 1);
-    setTargetDate(newDate);
-    await props.setTrgtDate(newDate);
-    getMenuApi(format((+newDate), 'yyyyMMdd'))
-  };
+    else{ //day의 날짜에 따라 TrgtDate 기준으로 날짜
+      newDate.setDate(props.TrgtDate.getDate() + day);
+      props.setTrgtDate(newDate);
+      getMenuApi(format((+newDate), 'yyyyMMdd'))
+    }
+  }
  
   /* 전체 메뉴 중 아침 메뉴 확인 */
   const breakfast = () => {
-    setBreakfastStatus(true);
-    setLunchStatus(false);
-    setDinnerStatus(false);
     setEatTime('breakfirstList')
   }
 
   /* 전체 메뉴 중 점심 메뉴 확인 */
   const lunch = () => {
-    setBreakfastStatus(false);
-    setLunchStatus(true);
-    setDinnerStatus(false);
     setEatTime('lunchList');
   }
 
   /* 전체 메뉴 중 저녁 메뉴 확인 */
   const dinner = () => {
-    setBreakfastStatus(false);
-    setLunchStatus(false);
-    setDinnerStatus(true);
     setEatTime('dinnerList');
+  }
+
+  const site = () => {
+    setEatSite()
   }
 
   /* 서버에서 메뉴를 받아 오는 함수 */
@@ -145,6 +124,7 @@ export const MainScreen = (props) => {
       const menuInfor = menulist[eatTime].map(
       (value1,index) => {
         // 각 코스별 세부 메뉴 반복
+        console.log(value1)
         const menuDetail = value1.list.map(
           (value2,index) =>{
             return (
@@ -179,15 +159,15 @@ export const MainScreen = (props) => {
     }
     else {
       return(
-        <View style={{width:'100%', height:'35%', marginTop:180}}>
-          <View style={{height:'80%'}}>
+        <View style={{width:'100%', height:100, marginTop:180}}>
+          <View style={{width:'100%', height: '100%', flex: 2}}>
             <Image
               source={require('./assets/no_menu.png')}
               style={{width: '100%', height: '100%'}}
               resizeMode='contain'
             />
           </View>
-          <View style={{alignItems:'center', margin:20 }}>
+          <View style={{width:'100%', height: '100%', alignItems:'center',  flex : 1, marginTop: 10}}>
             <Text style={{fontSize: 16}}>
               메뉴가 없어요.
             </Text>
@@ -197,7 +177,10 @@ export const MainScreen = (props) => {
     }
   }
 
+<<<<<<< .merge_file_p8DdqH
   
+=======
+>>>>>>> .merge_file_Sl97ZB
   return(
     /* 전체 화면 표기 부분 */
     <SafeAreaView>
@@ -220,11 +203,16 @@ export const MainScreen = (props) => {
             </Text>
           </View> */}
           <View style={{flexDirection:'row',borderColor: 'black', borderWidth: 1.2, width: '40%', height: '45%'}}>
+<<<<<<< .merge_file_p8DdqH
             <TouchableOpacity style={{justifyContent: 'center', alignItems: 'center',backgroundColor:'black', width:'50%', height:'100%'}}>
+=======
+            <TouchableOpacity style={styles.site_click}>
+>>>>>>> .merge_file_Sl97ZB
               <Text style={{color:'white'}}>
                 현대 건설
               </Text>
             </TouchableOpacity>
+<<<<<<< .merge_file_p8DdqH
             <TouchableOpacity style={{justifyContent: 'center', alignItems: 'center',backgroundColor:'white', width:'50%', height:'100%'}}>
               <Text style={{color:'black'}}>
                 마북 1동
@@ -235,6 +223,18 @@ export const MainScreen = (props) => {
           style={{flexDirection: 'row', justifyContent:'flex-end', marginRight:20, width: 50}}
           onPress={handlePresentModalPress}
           >
+=======
+            <TouchableOpacity style={styles.site_noclick}>
+              <Text style={{color:'black'}}>
+               마북 1동
+              </Text>
+            </TouchableOpacity>
+           </View>
+           <TouchableOpacity 
+            style={{flexDirection: 'row', justifyContent:'flex-end', marginRight:20, width: 50}}
+            onPress={handlePresentModalPress}
+            >
+>>>>>>> .merge_file_Sl97ZB
             <Image
               source={require('./assets/refresh.png')}
               style={{width: 23, height: 23}}
@@ -243,7 +243,7 @@ export const MainScreen = (props) => {
           </TouchableOpacity>
         </View>
         <View style={styles.itemcontainer}> 
-          <TouchableOpacity style={{margin: 5}} onPress={beforeDate}>
+          <TouchableOpacity style={{margin: 5}} onPress={()=>changeDate(-1)}>
             <Image
               source={require('./assets/left_arrow.png')}
               style={{width: 25, height: 25}}
@@ -252,9 +252,9 @@ export const MainScreen = (props) => {
           </TouchableOpacity>
           <View style={{margin: 5}}>
             <Text style={{fontSize:16}}>
-              {targetDate.getFullYear() + '년 ' + (targetDate.getMonth()+1) + '월 ' + targetDate.getDate() + '일 ' + week[targetDate.getDay()] + '요일'}
+              {props.TrgtDate.getFullYear() + '년 ' + (props.TrgtDate.getMonth()+1) + '월 ' + props.TrgtDate.getDate() + '일 ' + week[props.TrgtDate.getDay()] + '요일'}
             </Text>
-            <TouchableOpacity style={{alignItems:'center', margin: 5}} onPress={todayDate}>
+            <TouchableOpacity style={{alignItems:'center', margin: 5}} onPress={()=>changeDate(0)}>
               <Text style={{textDecorationLine: 'underline'}}>
                 오늘 메뉴 이동
               </Text>
@@ -262,7 +262,7 @@ export const MainScreen = (props) => {
           </View>
           <TouchableOpacity 
           style={{margin: 5}} 
-          onPress={nextDate}>
+          onPress={()=>changeDate(+1)}>
             <Image
                 source={require('./assets/right_arrow.png')}
                 style={{width: 25, height: 25}}
@@ -272,7 +272,7 @@ export const MainScreen = (props) => {
         </View>
         <View style={styles.eattingtab}>
           <TouchableOpacity 
-          style={[breakfastStatus === true ? styles.eattingtime_click : styles.eattingtime_noclick]} 
+          style={[eatTime === 'breakfirstList' ? styles.eattingtime_click : styles.eattingtime_noclick]} 
           onPress={breakfast}>
             <View>
               <Text>
@@ -281,7 +281,7 @@ export const MainScreen = (props) => {
             </View>
           </TouchableOpacity>
           <TouchableOpacity 
-          style={[lunchStauts === true ? styles.eattingtime_click : styles.eattingtime_noclick]} 
+          style={[eatTime === 'lunchList' ? styles.eattingtime_click : styles.eattingtime_noclick]} 
           onPress={lunch}>
             <View>
               <Text>
@@ -290,7 +290,7 @@ export const MainScreen = (props) => {
             </View>
           </TouchableOpacity>
           <TouchableOpacity 
-          style={[dinnerStatus === true ? styles.eattingtime_click : styles.eattingtime_noclick]} 
+          style={[eatTime === 'dinnerList' ? styles.eattingtime_click : styles.eattingtime_noclick]} 
           onPress={dinner}>
             <View>
               <Text>
@@ -384,6 +384,20 @@ const styles = StyleSheet.create({
       height:30,
       justifyContent: 'center',
       marginLeft: 20,
+    },
+    site_click: {
+      justifyContent: 'center', 
+      alignItems: 'center',
+      backgroundColor:'black', 
+      width:'50%', 
+      height:'100%',
+    },
+    site_noclick: {
+      justifyContent: 'center', 
+      alignItems: 'center',
+      backgroundColor:'white', 
+      width:'50%', 
+      height:'100%',
     },
     eattingtab: {
       backgroundColor: '#EAE8E8',
