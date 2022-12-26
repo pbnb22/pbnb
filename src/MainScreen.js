@@ -197,7 +197,6 @@ export const MainScreen = (props) => {
     }
   }
 
-  // branch 추가 테스트
   
   return(
     /* 전체 화면 표기 부분 */
@@ -215,15 +214,25 @@ export const MainScreen = (props) => {
               {props.pbnbData}
             </Text>
           </View>
-          <View
-          style ={{marginLeft: 15,}}
-          >
+          {/* <View style ={{marginLeft: 15,}}>
             <Text style={{fontSize: 16,}}>
-            {props.TrgtTeamLabelData}
+              {props.TrgtTeamLabelData}
             </Text>
+          </View> */}
+          <View style={{flexDirection:'row',borderColor: 'black', borderWidth: 1.2, width: '40%', height: '45%'}}>
+            <TouchableOpacity style={{justifyContent: 'center', alignItems: 'center',backgroundColor:'black', width:'50%', height:'100%'}}>
+              <Text style={{color:'white'}}>
+                현대 건설
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={{justifyContent: 'center', alignItems: 'center',backgroundColor:'white', width:'50%', height:'100%'}}>
+              <Text style={{color:'black'}}>
+                마북 1동
+              </Text>
+            </TouchableOpacity>
           </View>
           <TouchableOpacity 
-          style={{marginLeft:'auto',flexDirection: 'row', justifyContent:'flex-end', marginRight:20}}
+          style={{flexDirection: 'row', justifyContent:'flex-end', marginRight:20, width: 50}}
           onPress={handlePresentModalPress}
           >
             <Image
@@ -247,7 +256,7 @@ export const MainScreen = (props) => {
             </Text>
             <TouchableOpacity style={{alignItems:'center', margin: 5}} onPress={todayDate}>
               <Text style={{textDecorationLine: 'underline'}}>
-                오늘 메뉴 확인
+                오늘 메뉴 이동
               </Text>
             </TouchableOpacity>
           </View>
@@ -291,7 +300,7 @@ export const MainScreen = (props) => {
           </TouchableOpacity>
         </View>
 
-        <ScrollView style={{width:'85%'}}>
+        <ScrollView style={{width:'85%'}} showsVerticalScrollIndicator={false}>
           <Spinner
             visible={loadingstate}
             textContent={'메뉴 확인 중...'}
@@ -357,7 +366,7 @@ const styles = StyleSheet.create({
     container_topbar: {
       flexDirection: "row",
       alignItems: 'center',
-      justifyContent: 'flex-start',
+      justifyContent: 'space-between',
       borderBottomColor: "#bdbdbd",
       borderBottomWidth: 1,
       width:'100%',
