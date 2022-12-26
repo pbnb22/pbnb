@@ -189,7 +189,6 @@ export const MainScreen = (props) => {
       )
     }
   }
-
   return(
     /* 전체 화면 표기 부분 */
     <SafeAreaView>
@@ -206,6 +205,7 @@ export const MainScreen = (props) => {
               {props.pbnbData}
             </Text>
           </View>
+
           <View style={{flexDirection:'row',borderColor: 'black', borderWidth: 1.2, width: '40%', height: '48%'}}>
             <TouchableOpacity style={[eatSite === '10552' ? styles.site_click : styles.site_noclick]} onPress={()=>site("10552")}>
               <Text style={[eatSite === '10552' ? {color:'white'} : {color:'black'}]}>
