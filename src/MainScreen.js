@@ -124,7 +124,6 @@ export const MainScreen = (props) => {
       const menuInfor = menulist[eatTime].map(
       (value1,index) => {
         // 각 코스별 세부 메뉴 반복
-        console.log(value1)
         const menuDetail = value1.list.map(
           (value2,index) =>{
             return (
@@ -177,10 +176,6 @@ export const MainScreen = (props) => {
     }
   }
 
-<<<<<<< .merge_file_p8DdqH
-  
-=======
->>>>>>> .merge_file_Sl97ZB
   return(
     /* 전체 화면 표기 부분 */
     <SafeAreaView>
@@ -203,27 +198,11 @@ export const MainScreen = (props) => {
             </Text>
           </View> */}
           <View style={{flexDirection:'row',borderColor: 'black', borderWidth: 1.2, width: '40%', height: '45%'}}>
-<<<<<<< .merge_file_p8DdqH
-            <TouchableOpacity style={{justifyContent: 'center', alignItems: 'center',backgroundColor:'black', width:'50%', height:'100%'}}>
-=======
             <TouchableOpacity style={styles.site_click}>
->>>>>>> .merge_file_Sl97ZB
               <Text style={{color:'white'}}>
                 현대 건설
               </Text>
             </TouchableOpacity>
-<<<<<<< .merge_file_p8DdqH
-            <TouchableOpacity style={{justifyContent: 'center', alignItems: 'center',backgroundColor:'white', width:'50%', height:'100%'}}>
-              <Text style={{color:'black'}}>
-                마북 1동
-              </Text>
-            </TouchableOpacity>
-          </View>
-          <TouchableOpacity 
-          style={{flexDirection: 'row', justifyContent:'flex-end', marginRight:20, width: 50}}
-          onPress={handlePresentModalPress}
-          >
-=======
             <TouchableOpacity style={styles.site_noclick}>
               <Text style={{color:'black'}}>
                마북 1동
@@ -234,7 +213,6 @@ export const MainScreen = (props) => {
             style={{flexDirection: 'row', justifyContent:'flex-end', marginRight:20, width: 50}}
             onPress={handlePresentModalPress}
             >
->>>>>>> .merge_file_Sl97ZB
             <Image
               source={require('./assets/refresh.png')}
               style={{width: 23, height: 23}}
