@@ -7,6 +7,8 @@ import { format } from 'date-fns'
 import FastImage from "react-native-fast-image";
 import Spinner from 'react-native-loading-spinner-overlay';
 import { createImageProgress } from 'react-native-image-progress';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 const Imageload = createImageProgress(FastImage);
 
 export const MainScreen = (props) => {
@@ -17,15 +19,21 @@ export const MainScreen = (props) => {
 
   const [menulist, setMenulist] = useState(null);
   const [eatTime, setEatTime] = useState(null);
-  const [eatSite, setEatSite] = useState(null);
+  const [eatSite, setEatSite] = useState("10552");
 
   const [loadingstate, setLoadingstate] = useState(false);
 
   /* 화면 호출 시 현재 시간에 따른 식사 표기 */
   useEffect(() => {
     const newDate = new Date(props.TrgtDate);
-    getMenuApi(format((+newDate), 'yyyyMMdd')); // 첫 메뉴는 현재 시간 기준 표기
+    getMenuApi(format((+newDate), 'yyyyMMdd'), eatSite); // 첫 메뉴는 현재 시간 기준 표기
     eat_hours(props.TrgtDate.getHours()); // 식사 시간 기준으로 메뉴 (탭) 결정
+
+    const storageSite = async () => {
+      const initSite = await AsyncStorage.getItem("StoragedSite");
+      site(initSite);
+    };
+    storageSite();
   },[]);
 
   /* 시간에 따른 메뉴 결정 */
@@ -74,13 +82,13 @@ export const MainScreen = (props) => {
       if (newDate.getFullYear() !== props.TrgtDate.getFullYear() || newDate.getMonth() !== props.TrgtDate.getMonth() || newDate.getDate() !== props.TrgtDate.getDate()){ 
         console.log("Today Change Date");
         props.setTrgtDate(newDate);
-        getMenuApi(format((+newDate), 'yyyyMMdd'))
+        getMenuApi(format((+newDate), 'yyyyMMdd'), eatSite)
       }
     }
     else{ //day의 날짜에 따라 TrgtDate 기준으로 날짜
       newDate.setDate(props.TrgtDate.getDate() + day);
       props.setTrgtDate(newDate);
-      getMenuApi(format((+newDate), 'yyyyMMdd'))
+      getMenuApi(format((+newDate), 'yyyyMMdd'), eatSite)
     }
   }
  
@@ -99,18 +107,24 @@ export const MainScreen = (props) => {
     setEatTime('dinnerList');
   }
 
-  const site = () => {
-    setEatSite()
+  /* 식당에 따른 메뉴 확인 */
+  const site = (bizplc_cd) => {
+    setEatSite(bizplc_cd);
+
+    if (eatSite !== bizplc_cd){
+      getMenuApi(format((+props.TrgtDate), 'yyyyMMdd'), bizplc_cd)
+      AsyncStorage.setItem("StoragedSite", bizplc_cd); //Local Storage 저장
+    };
   }
 
   /* 서버에서 메뉴를 받아 오는 함수 */
-  const getMenuApi = async (apiDate) => {
+  const getMenuApi = async (apiDate, eatSite) => {
     setLoadingstate(true);
     const response = await axios.post('https://asia-northeast1-pbnb-2f164.cloudfunctions.net/menu_v_2_0_0',
       {
           st_dt: apiDate,
           end_dt: apiDate,
-          bizplc_cd: "10552", // 10095: 1동 식당 코드 -> 식당 선택하게 하는 기능 추가 필요
+          bizplc_cd: eatSite, // 10095: 1동 식당 코드 -> 식당 선택하게 하는 기능 추가 필요
       },
     )
     setMenulist(response.data);
@@ -192,20 +206,15 @@ export const MainScreen = (props) => {
               {props.pbnbData}
             </Text>
           </View>
-          {/* <View style ={{marginLeft: 15,}}>
-            <Text style={{fontSize: 16,}}>
-              {props.TrgtTeamLabelData}
-            </Text>
-          </View> */}
-          <View style={{flexDirection:'row',borderColor: 'black', borderWidth: 1.2, width: '40%', height: '45%'}}>
-            <TouchableOpacity style={styles.site_click}>
-              <Text style={{color:'white'}}>
+          <View style={{flexDirection:'row',borderColor: 'black', borderWidth: 1.2, width: '40%', height: '48%'}}>
+            <TouchableOpacity style={[eatSite === '10552' ? styles.site_click : styles.site_noclick]} onPress={()=>site("10552")}>
+              <Text style={[eatSite === '10552' ? {color:'white'} : {color:'black'}]}>
                 현대 건설
               </Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.site_noclick}>
-              <Text style={{color:'black'}}>
-               마북 1동
+            <TouchableOpacity style={[eatSite === '10095' ? styles.site_click : styles.site_noclick]} onPress={()=>site("10095")}>
+              <Text style={[eatSite === '10095' ? {color:'white'} : {color:'black'}]}>
+                마북 1동
               </Text>
             </TouchableOpacity>
            </View>
