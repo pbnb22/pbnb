@@ -7,28 +7,33 @@ import { format } from 'date-fns'
 import FastImage from "react-native-fast-image";
 import Spinner from 'react-native-loading-spinner-overlay';
 import { createImageProgress } from 'react-native-image-progress';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 const Imageload = createImageProgress(FastImage);
 
 export const MainScreen = (props) => {
   const [open, setOpen] = useState(false); 
   const [value, setValue] = useState(null);
 
-  const [breakfastStatus, setBreakfastStatus] = useState(false);
-  const [lunchStauts, setLunchStatus] = useState(false);
-  const [dinnerStatus, setDinnerStatus] = useState(false);
-
   const week = ['일','월','화','수','목','금','토'];
 
   const [menulist, setMenulist] = useState(null);
   const [eatTime, setEatTime] = useState(null);
+  const [eatSite, setEatSite] = useState("10552");
 
   const [loadingstate, setLoadingstate] = useState(false);
 
   /* 화면 호출 시 현재 시간에 따른 식사 표기 */
   useEffect(() => {
     const newDate = new Date(props.TrgtDate);
-    getMenuApi(format((+newDate), 'yyyyMMdd')); // 첫 메뉴는 현재 시간 기준 표기
+    getMenuApi(format((+newDate), 'yyyyMMdd'), eatSite); // 첫 메뉴는 현재 시간 기준 표기
     eat_hours(props.TrgtDate.getHours()); // 식사 시간 기준으로 메뉴 (탭) 결정
+
+    const storageSite = async () => {
+      const initSite = await AsyncStorage.getItem("StoragedSite");
+      site(initSite);
+    };
+    storageSite();
   },[]);
 
   /* 시간에 따른 메뉴 결정 */
@@ -77,48 +82,49 @@ export const MainScreen = (props) => {
       if (newDate.getFullYear() !== props.TrgtDate.getFullYear() || newDate.getMonth() !== props.TrgtDate.getMonth() || newDate.getDate() !== props.TrgtDate.getDate()){ 
         console.log("Today Change Date");
         props.setTrgtDate(newDate);
-        getMenuApi(format((+newDate), 'yyyyMMdd'))
+        getMenuApi(format((+newDate), 'yyyyMMdd'), eatSite)
       }
     }
     else{ //day의 날짜에 따라 TrgtDate 기준으로 날짜
       newDate.setDate(props.TrgtDate.getDate() + day);
       props.setTrgtDate(newDate);
-      getMenuApi(format((+newDate), 'yyyyMMdd'))
+      getMenuApi(format((+newDate), 'yyyyMMdd'), eatSite)
     }
   }
  
   /* 전체 메뉴 중 아침 메뉴 확인 */
   const breakfast = () => {
-    setBreakfastStatus(true);
-    setLunchStatus(false);
-    setDinnerStatus(false);
     setEatTime('breakfirstList')
   }
 
   /* 전체 메뉴 중 점심 메뉴 확인 */
   const lunch = () => {
-    setBreakfastStatus(false);
-    setLunchStatus(true);
-    setDinnerStatus(false);
     setEatTime('lunchList');
   }
 
   /* 전체 메뉴 중 저녁 메뉴 확인 */
   const dinner = () => {
-    setBreakfastStatus(false);
-    setLunchStatus(false);
-    setDinnerStatus(true);
     setEatTime('dinnerList');
   }
 
+  /* 식당에 따른 메뉴 확인 */
+  const site = (bizplc_cd) => {
+    setEatSite(bizplc_cd);
+
+    if (eatSite !== bizplc_cd){
+      getMenuApi(format((+props.TrgtDate), 'yyyyMMdd'), bizplc_cd)
+      AsyncStorage.setItem("StoragedSite", bizplc_cd); //Local Storage 저장
+    };
+  }
+
   /* 서버에서 메뉴를 받아 오는 함수 */
-  const getMenuApi = async (apiDate) => {
+  const getMenuApi = async (apiDate, eatSite) => {
     setLoadingstate(true);
     const response = await axios.post('https://asia-northeast1-pbnb-2f164.cloudfunctions.net/menu_v_2_0_0',
       {
           st_dt: apiDate,
           end_dt: apiDate,
-          bizplc_cd: "10552", // 10095: 1동 식당 코드 -> 식당 선택하게 하는 기능 추가 필요
+          bizplc_cd: eatSite, // 10095: 1동 식당 코드 -> 식당 선택하게 하는 기능 추가 필요
       },
     )
     setMenulist(response.data);
@@ -183,7 +189,6 @@ export const MainScreen = (props) => {
       )
     }
   }
-
   return(
     /* 전체 화면 표기 부분 */
     <SafeAreaView>
@@ -200,17 +205,23 @@ export const MainScreen = (props) => {
               {props.pbnbData}
             </Text>
           </View>
-          <View
-          style ={{marginLeft: 15,}}
-          >
-            <Text style={{fontSize: 16,}}>
-            {props.TrgtTeamLabelData}
-            </Text>
-          </View>
-          <TouchableOpacity 
-          style={{marginLeft:'auto',flexDirection: 'row', justifyContent:'flex-end', marginRight:20}}
-          onPress={handlePresentModalPress}
-          >
+
+          <View style={{flexDirection:'row',borderColor: 'black', borderWidth: 1.2, width: '40%', height: '48%'}}>
+            <TouchableOpacity style={[eatSite === '10552' ? styles.site_click : styles.site_noclick]} onPress={()=>site("10552")}>
+              <Text style={[eatSite === '10552' ? {color:'white'} : {color:'black'}]}>
+                현대 건설
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={[eatSite === '10095' ? styles.site_click : styles.site_noclick]} onPress={()=>site("10095")}>
+              <Text style={[eatSite === '10095' ? {color:'white'} : {color:'black'}]}>
+                마북 1동
+              </Text>
+            </TouchableOpacity>
+           </View>
+           <TouchableOpacity 
+            style={{flexDirection: 'row', justifyContent:'flex-end', marginRight:20, width: 50}}
+            onPress={handlePresentModalPress}
+            >
             <Image
               source={require('./assets/refresh.png')}
               style={{width: 23, height: 23}}
@@ -232,7 +243,7 @@ export const MainScreen = (props) => {
             </Text>
             <TouchableOpacity style={{alignItems:'center', margin: 5}} onPress={()=>changeDate(0)}>
               <Text style={{textDecorationLine: 'underline'}}>
-                오늘 메뉴 확인
+                오늘 메뉴 이동
               </Text>
             </TouchableOpacity>
           </View>
@@ -248,7 +259,7 @@ export const MainScreen = (props) => {
         </View>
         <View style={styles.eattingtab}>
           <TouchableOpacity 
-          style={[breakfastStatus === true ? styles.eattingtime_click : styles.eattingtime_noclick]} 
+          style={[eatTime === 'breakfirstList' ? styles.eattingtime_click : styles.eattingtime_noclick]} 
           onPress={breakfast}>
             <View>
               <Text>
@@ -257,7 +268,7 @@ export const MainScreen = (props) => {
             </View>
           </TouchableOpacity>
           <TouchableOpacity 
-          style={[lunchStauts === true ? styles.eattingtime_click : styles.eattingtime_noclick]} 
+          style={[eatTime === 'lunchList' ? styles.eattingtime_click : styles.eattingtime_noclick]} 
           onPress={lunch}>
             <View>
               <Text>
@@ -266,7 +277,7 @@ export const MainScreen = (props) => {
             </View>
           </TouchableOpacity>
           <TouchableOpacity 
-          style={[dinnerStatus === true ? styles.eattingtime_click : styles.eattingtime_noclick]} 
+          style={[eatTime === 'dinnerList' ? styles.eattingtime_click : styles.eattingtime_noclick]} 
           onPress={dinner}>
             <View>
               <Text>
@@ -276,7 +287,7 @@ export const MainScreen = (props) => {
           </TouchableOpacity>
         </View>
 
-        <ScrollView style={{width:'85%'}}>
+        <ScrollView style={{width:'85%'}} showsVerticalScrollIndicator={false}>
           <Spinner
             visible={loadingstate}
             textContent={'메뉴 확인 중...'}
@@ -342,7 +353,7 @@ const styles = StyleSheet.create({
     container_topbar: {
       flexDirection: "row",
       alignItems: 'center',
-      justifyContent: 'flex-start',
+      justifyContent: 'space-between',
       borderBottomColor: "#bdbdbd",
       borderBottomWidth: 1,
       width:'100%',
@@ -360,6 +371,20 @@ const styles = StyleSheet.create({
       height:30,
       justifyContent: 'center',
       marginLeft: 20,
+    },
+    site_click: {
+      justifyContent: 'center', 
+      alignItems: 'center',
+      backgroundColor:'black', 
+      width:'50%', 
+      height:'100%',
+    },
+    site_noclick: {
+      justifyContent: 'center', 
+      alignItems: 'center',
+      backgroundColor:'white', 
+      width:'50%', 
+      height:'100%',
     },
     eattingtab: {
       backgroundColor: '#EAE8E8',

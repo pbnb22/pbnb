@@ -18,7 +18,6 @@ export const App = () => {
     {label: '연료전지제어개발2팀', value: 'FCCF'},
   ]);
   const week_en = ['sun','mon','tue','wed','thu','fri','sat'];
-
   /*빠밥늦밥 정보 얻기 */
   const getPbnbState = async (TeamData) => {
     if(TeamData !== null){
@@ -37,16 +36,16 @@ export const App = () => {
     }
   };
 
-  /*Team Setting */
-  const onSetTeam = (TeamSelected) => { //useState 저장 (Team Value, Label) -> Pbnb 상태 얻기
-    if(TeamSelected !== null){
-      setTrgtTeamData(TeamSelected); //useState TeamTrgtData Setting
-      let res = Teamitems.filter(it => it.value.includes(TeamSelected));
-      setTrgtTeamLabelData(res[0].label); //useState TeamTrgtLabel Setting
-      AsyncStorage.setItem("StoragedTeamData", TeamSelected); //Local Storage 저장
-      getPbnbState(TeamSelected);
+    /*Team Setting */
+    const onSetTeam = async (TeamSelected) => { //useState 저장 (Team Value, Label) -> Pbnb 상태 얻기
+      if(TeamSelected !== null){
+        await setTrgtTeamData(TeamSelected); //useState TeamTrgtData Setting
+        let res = Teamitems.filter(it => it.value.includes(TeamSelected));
+        await setTrgtTeamLabelData(res[0].label); //useState TeamTrgtLabel Setting
+        await AsyncStorage.setItem("StoragedTeamData", TeamSelected); //Local Storage 저장
+        getPbnbState(TeamSelected);
+      }
     }
-  }
 
   /* Initial Process */
   useEffect( //초기 실행시 2초간 SplashScreen 수행 후 Local Storage에 저장된 Team Data Get
@@ -59,17 +58,23 @@ export const App = () => {
         onSetTeam(storageTeamData);
       }
       else{
-        console.log("Team Information is not saved");     
+        console.log("Team Information is not saved");
+        
       }
       console.log('초기 Team Data Get : '+storageTeamData);
     }
     getTeamData();
-  },[]);
+    targetDate= new Date();
+  },
+  []
+);
 
-  useEffect(
+useEffect(
   ()=>{
-      getPbnbState(TrgtTeamData)
-  },[week_en[TrgtDate.getDay()]])
+    getPbnbState(TrgtTeamData)
+  },
+  [week_en[TrgtDate.getDay()]]
+)
 
   const getScreen = () =>{
     if(ShowSplashScreen === true){
