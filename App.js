@@ -57,7 +57,7 @@ export const App = () => {
     if(GrpData !== null){
       console.log('API : '+ GrpData," ",TrgtDate.getMonth()+1)
       const response = await axios.get(
-        'https://asia-northeast1-beme-55b97.cloudfunctions.net/getPbnb_3Sub',
+        'https://asia-northeast1-pbnb-ed5fa.cloudfunctions.net/getPbnb',
         {
           params: {
             TeamGrp : GrpData,
@@ -77,7 +77,7 @@ export const App = () => {
     if(SelectedTimeTable !== null){
       console.log('Group SET API 호출 : '+ SelectedTimeTable," ",TrgtDate.getMonth()+1)
       const response = await axios.get(
-        'https://asia-northeast1-beme-55b97.cloudfunctions.net/teamGrouping_3sub',
+        'https://asia-northeast1-pbnb-ed5fa.cloudfunctions.net/teamGrouping',
         {
           params: {
             TimeTable : SelectedTimeTable,
