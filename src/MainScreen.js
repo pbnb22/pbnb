@@ -81,8 +81,8 @@ export const MainScreen = (props) => {
 
   /*요일 변경 함수 => 0: Today */
   const changeDate = (day) => {
-    const newDate = new Date();
     if(day === 0){ //day 파라미타가 0으로 오면 오늘 날짜를 보여줘요
+      let newDate = new Date();
       if (newDate.getFullYear() !== props.TrgtDate.getFullYear() || newDate.getMonth() !== props.TrgtDate.getMonth() || newDate.getDate() !== props.TrgtDate.getDate()){ 
         console.log("Today Change Date");
         props.setTrgtDate(newDate);
@@ -90,6 +90,7 @@ export const MainScreen = (props) => {
       }
     }
     else{ //day의 날짜에 따라 TrgtDate 기준으로 날짜
+      let newDate = new Date(props.TrgtDate);
       newDate.setDate(props.TrgtDate.getDate() + day);
       props.setTrgtDate(newDate);
       getMenuApi(format((+newDate), 'yyyyMMdd'), eatSite)
