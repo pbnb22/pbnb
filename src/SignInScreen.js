@@ -24,7 +24,7 @@ export const SignInScreen = (props) => {
             <View style = {styles.select_container}>
                 <View style = {{marginTop : 10, marginBottom: 5}}>
                     <Text style ={{textAlign:'center'}}>
-                        '앞으로 밥 먹는 순서를 알려드릴게요.'
+                        앞으로 밥 먹는 순서를 알려드릴게요.
                     </Text>
                 </View>
                 <View style={{marginTop : 25, marginBottom: 130 , width: 250}}>
