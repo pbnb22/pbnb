@@ -6,11 +6,7 @@ import DropDownPicker from 'react-native-dropdown-picker';
 export const SignInScreen = (props) => {
 
     const [open, setOpen] = useState(false)
-    const [value, setValue] = useState(null);
-
-    const onSetTeam = async () => {
-        props.onSetGrp(value);
-    }
+    const [TimeTablevalue, setTimeTablevalue] = useState(null);
 
     return(
         <View style = {styles.container}>
@@ -26,25 +22,25 @@ export const SignInScreen = (props) => {
             </View>
 
             <View style = {styles.select_container}>
-                <View style = {{marginTop : 10}}>
+                <View style = {{marginTop : 10, marginBottom: 5}}>
                     <Text style ={{textAlign:'center'}}>
-                        어느 팀 소속이세요? {"\n"} 오늘 밥 먹는 순서를 알려드릴게요.
+                        '앞으로 밥 먹는 순서를 알려드릴게요.'
                     </Text>
                 </View>
-                <View style={{marginTop : 25, marginBottom: 110 , width: 250}}>
+                <View style={{marginTop : 25, marginBottom: 130 , width: 250}}>
                     <DropDownPicker
-                    placeholder="팀을 선택해주세요"
+                    placeholder="오늘 밥먹는 순서는 언제에요?"
                     open={open}
-                    value={value}
-                    items={props.Teamitems}
+                    value={TimeTablevalue}
+                    items={props.TimeTableitems}
                     setOpen={setOpen}
-                    setValue={setValue}
-                    setItems={props.setTeamitems}
-                    maxHeight={100}
+                    setValue={setTimeTablevalue}
+                    setItems={props.TimeTableitems}
+                    maxHeight={120}
                     />
                 </View>
                 <TouchableOpacity 
-                onPress={onSetTeam}
+                onPress={()=>props.onChangeGrp(TimeTablevalue)}
                 style ={styles.confirm}>
                     <Text style ={{color : 'white'}}>
                         확인

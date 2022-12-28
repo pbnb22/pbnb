@@ -12,27 +12,27 @@ export const App = () => {
   const [TrgtDate, setTrgtDate] = useState(new Date());
   const [pbnbData, setpbnbData] = useState(null);
   const [TrgtGrp, setTrgtGrp] = useState(null);
-  const [Teamitems, setTeamitems] = useState([
-    {label: '연료전지제어개발1팀', value: 'FCCD'},
-    {label: '연료전지제어개발2팀', value: 'FCCF'},
+  const [TimeTableitems, setTimeTableitems] = useState([
+    {label: '12:00~12:30', value: 'Atime'},
+    {label: '12:30~13:00', value: 'Btime'},
+    {label: '13:00~13:30', value: 'Ctime'},
   ]);
   const week_en = ['sun','mon','tue','wed','thu','fri','sat'];
 
-  /**처음 앱 실행시 수행되는 훅이에요 */
+  /**처음 앱 실행시 수행되는 HOOK이에요 */
   useEffect(
   ()=>{
     setTimeout(()=>{setShowSplashScreen(false)}, 2000); // 2초후 ShowSplashScreen을 True로 Set해줘요
-    /** */
     const getTeamData = async () => {
-      const storageTeamData = await AsyncStorage.getItem("StoragedGrp");
-      if(storageTeamData) {
+      const StoragedGrpData = await AsyncStorage.getItem("StoragedGrp");
+      if(StoragedGrpData) {
         console.log("GET Team data from storage");
-        onSetGrp(storageTeamData);
+        setTrgtGrp(StoragedGrpData);
       }
       else{
         console.log("Team Information is not saved");     
       }
-      console.log('초기 Team Data Get : '+storageTeamData);
+      console.log('초기 Team Data Get : '+StoragedGrpData);
     }
     getTeamData();
   },[]);
@@ -47,35 +47,49 @@ export const App = () => {
   useEffect(
     ()=>{
         getPbnbState(TrgtGrp)
+        console.log('Group SET API usestate 반환: '+ TrgtGrp)
     },[TrgtGrp])
 
     
 
-  /*빠밥늦밥 정보 얻기 */
-  const getPbnbState = async (TeamData) => {
-    if(TeamData !== null){
-      console.log('API : '+ TeamData," ",week_en[TrgtDate.getDay()]," ",TrgtDate.getMonth()+1)
+  /** 빠밥 늦밥 정보 가져오기 (2부제) -> 3부제 사용으로 현재 미사용*/
+  const getPbnbState = async (GrpData) => {
+    if(GrpData !== null){
+      console.log('API : '+ GrpData," ",TrgtDate.getMonth()+1)
       const response = await axios.get(
-        'https://asia-northeast1-beme-55b97.cloudfunctions.net/getPbnb/',
+        'https://asia-northeast1-beme-55b97.cloudfunctions.net/getPbnb_3Sub',
         {
           params: {
-            team : TeamData,
-            dayOfWeek : week_en[TrgtDate.getDay()], //요일 요청해야함. 월마다 바뀌는건 Server에서 처리함.
+            TeamGrp : GrpData,
             month : TrgtDate.getMonth()+1,
+            weekofday: week_en[TrgtDate.getDay()],
           }
         }
       )
       setpbnbData(response.data.status);
+      console.log('밥먹는 시간: '+ response.data.status)
+    }
+    
+  };
+  
+ /** 소속 Group을 변경하기위해 수행되는 함수에요 */
+  const onChangeGrp = async (SelectedTimeTable) => {
+    if(SelectedTimeTable !== null){
+      console.log('Group SET API 호출 : '+ SelectedTimeTable," ",TrgtDate.getMonth()+1)
+      const response = await axios.get(
+        'https://asia-northeast1-beme-55b97.cloudfunctions.net/teamGrouping_3sub',
+        {
+          params: {
+            TimeTable : SelectedTimeTable,
+            month : TrgtDate.getMonth()+1,
+          }
+        }
+      )
+      console.log('Group SET API 호출 반환: '+ response.data.status);
+      setTrgtGrp(response.data.status);
+      AsyncStorage.setItem("StoragedGrp", response.data.status); 
     }
   };
-
-  /**Group 설정에 사용되는 함수에요 2부제 일때는 Agrp, Bgrp 3부제 일때는 Cgrp까지 있어요*/
-  const onSetGrp = (SelectedGrp) => {
-    if(SelectedGrp !== null){
-      setTrgtGrp(SelectedGrp); 
-      AsyncStorage.setItem("StoragedGrp", SelectedGrp); 
-    }
-  }
 
   /**Screen 화면 Manage 해주는 함수에요 */
   const getScreen = () =>{
@@ -89,9 +103,9 @@ export const App = () => {
         return(
           <MainScreen 
           pbnbData = {pbnbData} 
-          onSetGrp = {onSetGrp}
-          Teamitems = {Teamitems} 
-          setTeamitems = {setTeamitems}
+          onChangeGrp = {onChangeGrp}
+          TimeTableitems = {TimeTableitems} 
+          setTimeTableitems = {setTimeTableitems}
           setTrgtDate = {setTrgtDate}
           TrgtDate = {TrgtDate}
           />
@@ -99,7 +113,7 @@ export const App = () => {
       }
       else{
         return(
-          <SignInScreen onSetGrp = {onSetGrp} Teamitems = {Teamitems} setTeamitems = {setTeamitems}/>
+          <SignInScreen onChangeGrp = {onChangeGrp} TimeTableitems = {TimeTableitems} setTimeTableitems = {setTimeTableitems}/>
         )
       }
     }

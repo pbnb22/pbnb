@@ -49,7 +49,7 @@ export const MainScreen = (props) => {
 
   /*BottomSheet Function*/
   const bottomSheetModalRef = useRef(null);
-  const snapPoints = useMemo(() => ['25%', '40%'], []);
+  const snapPoints = useMemo(() => ['25%', '50%'], []);
   const handlePresentModalPress = useCallback(() => {
     bottomSheetModalRef.current?.present();
   }, []);
@@ -74,7 +74,7 @@ export const MainScreen = (props) => {
   const TeamStateChange = () => {
     if(value !== null)
     {
-      props.onSetGrp(value);
+      props.onChangeGrp(value);
       handleClosePress();
     }
   }
@@ -200,9 +200,8 @@ export const MainScreen = (props) => {
       <View style = {styles.maincontainer}>
         <View style = {styles.container_topbar}>
           <View style={[styles.pbnb, 
-            props.pbnbData == '빠밥' ? {backgroundColor: '#FDC664'} : 
-            props.pbnbData == '늦밥' ? {backgroundColor: '#FB8C6F'} :
-            {backgroundColor: '#73607D'}
+            props.pbnbData == '휴일' ? {backgroundColor: '#FF7FAE'} : 
+            {backgroundColor: '#8333E9'}
             ]}>
             <Text 
             style={{fontSize: 16, textAlign: 'center', color: 'white'}}
@@ -314,18 +313,18 @@ export const MainScreen = (props) => {
             >
               <View style={{flex:1, alignItems: 'center', marginTop: 15, justifyContent: 'flex-start'}}>
                 <View>
-                  <Text style={{fontSize:15}}>팀을 변경하고 싶으세요?</Text>
+                  <Text style={{fontSize:15}}>밥먹는 시간이 안맞으신가요?</Text>
                 </View>
                 <View style ={{marginTop: 25, width: 300}}>
                   <DropDownPicker
-                  placeholder="팀을 선택해주세요."
+                  placeholder="오늘 밥먹는 순서를 알려주세요."
                   open={open}
                   value={value}
-                  items={props.Teamitems}
+                  items={props.TimeTableitems}
                   setOpen={setOpen}
                   setValue={setValue}
-                  setItems={props.setTeamitems}
-                  maxHeight={100}
+                  setItems={props.setTimeTableitems}
+                  maxHeight={150}
                   />
                   <TouchableOpacity 
                   style ={styles.confirm}
@@ -423,7 +422,7 @@ const styles = StyleSheet.create({
       justifyContent: 'flex-start',
       alignItems: 'center',
       width: 300,
-      marginTop: 90,
+      marginTop: 130,
       paddingTop: 15,
       paddingBottom: 15,
       borderRadius: 25,
