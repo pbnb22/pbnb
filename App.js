@@ -11,81 +11,101 @@ export const App = () => {
   const [ShowSplashScreen, setShowSplashScreen] = useState(true);
   const [TrgtDate, setTrgtDate] = useState(new Date());
   const [pbnbData, setpbnbData] = useState(null);
-  const [TrgtTeamData, setTrgtTeamData] = useState(null);
-  const [TrgtTeamLabelData, setTrgtTeamLabelData] = useState(null);
-  const [Teamitems, setTeamitems] = useState([
-    {label: '연료전지제어개발1팀', value: 'FCCD'},
-    {label: '연료전지제어개발2팀', value: 'FCCF'},
+  const [TrgtGrp, setTrgtGrp] = useState(null);
+  const [TimeTableitems, setTimeTableitems] = useState([
+    {label: '12:00~12:30', value: 'Atime'},
+    {label: '12:30~13:00', value: 'Btime'},
+    {label: '13:00~13:30', value: 'Ctime'},
   ]);
   const week_en = ['sun','mon','tue','wed','thu','fri','sat'];
 
-  /*빠밥늦밥 정보 얻기 */
-  const getPbnbState = async (TeamData) => {
-    if(TeamData !== null){
-      console.log('API : '+ TeamData," ",week_en[TrgtDate.getDay()]," ",TrgtDate.getMonth()+1)
-      const response = await axios.get(
-        'https://asia-northeast1-beme-55b97.cloudfunctions.net/getPbnb/',
-        {
-          params: {
-            team : TeamData,
-            dayOfWeek : week_en[TrgtDate.getDay()], //요일 요청해야함. 월마다 바뀌는건 Server에서 처리함.
-            month : TrgtDate.getMonth()+1,
-          }
-        }
-      )
-      setpbnbData(response.data.status);
-    }
-  };
-
-  /*Team Setting */
-  const onSetTeam = (TeamSelected) => { //useState 저장 (Team Value, Label) -> Pbnb 상태 얻기
-    if(TeamSelected !== null){
-      setTrgtTeamData(TeamSelected); //useState TeamTrgtData Setting
-      let res = Teamitems.filter(it => it.value.includes(TeamSelected));
-      setTrgtTeamLabelData(res[0].label); //useState TeamTrgtLabel Setting
-      AsyncStorage.setItem("StoragedTeamData", TeamSelected); //Local Storage 저장
-      getPbnbState(TeamSelected);
-    }
-  }
-
-  /* Initial Process */
-  useEffect( //초기 실행시 2초간 SplashScreen 수행 후 Local Storage에 저장된 Team Data Get
+  /**처음 앱 실행시 수행되는 HOOK이에요 */
+  useEffect(
   ()=>{
-    setTimeout(()=>{setShowSplashScreen(false)}, 2000); // 2s후 ShowSplashScreen을 True로 Set
+    setTimeout(()=>{setShowSplashScreen(false)}, 2000); // 2초후 ShowSplashScreen을 True로 Set해줘요
     const getTeamData = async () => {
-      const storageTeamData = await AsyncStorage.getItem("StoragedTeamData");
-      if(storageTeamData) {
+      const StoragedGrpData = await AsyncStorage.getItem("StoragedGrp");
+      if(StoragedGrpData) {
         console.log("GET Team data from storage");
-        onSetTeam(storageTeamData);
+        setTrgtGrp(StoragedGrpData);
       }
       else{
         console.log("Team Information is not saved");     
       }
-      console.log('초기 Team Data Get : '+storageTeamData);
+      console.log('초기 Team Data Get : '+StoragedGrpData);
     }
     getTeamData();
   },[]);
 
+  /**요일이 바뀜에 따라 빠밥 늦밥 정보를 불러오는 React Hook */
   useEffect(
   ()=>{
-      getPbnbState(TrgtTeamData)
+      getPbnbState(TrgtGrp)
   },[week_en[TrgtDate.getDay()]])
 
+  /**TrgtGrp이 바뀜에 따라 빠밥 늦밥 정보를 불러오는 React Hook */
+  useEffect(
+    ()=>{
+        getPbnbState(TrgtGrp)
+        console.log('Group SET API usestate 반환: '+ TrgtGrp)
+    },[TrgtGrp])
+
+    
+
+  /** 빠밥 늦밥 정보 가져오기 (2부제) -> 3부제 사용으로 현재 미사용*/
+  const getPbnbState = async (GrpData) => {
+    if(GrpData !== null){
+      console.log('API : '+ GrpData," ",TrgtDate.getMonth()+1)
+      const response = await axios.get(
+        'https://asia-northeast1-beme-55b97.cloudfunctions.net/getPbnb_3Sub',
+        {
+          params: {
+            TeamGrp : GrpData,
+            month : TrgtDate.getMonth()+1,
+            weekofday: week_en[TrgtDate.getDay()],
+          }
+        }
+      )
+      setpbnbData(response.data.status);
+      console.log('밥먹는 시간: '+ response.data.status)
+    }
+    
+  };
+  
+ /** 소속 Group을 변경하기위해 수행되는 함수에요 */
+  const onChangeGrp = async (SelectedTimeTable) => {
+    if(SelectedTimeTable !== null){
+      console.log('Group SET API 호출 : '+ SelectedTimeTable," ",TrgtDate.getMonth()+1)
+      const response = await axios.get(
+        'https://asia-northeast1-beme-55b97.cloudfunctions.net/teamGrouping_3sub',
+        {
+          params: {
+            TimeTable : SelectedTimeTable,
+            month : TrgtDate.getMonth()+1,
+          }
+        }
+      )
+      console.log('Group SET API 호출 반환: '+ response.data.status);
+      setTrgtGrp(response.data.status);
+      AsyncStorage.setItem("StoragedGrp", response.data.status); 
+    }
+  };
+
+  /**Screen 화면 Manage 해주는 함수에요 */
   const getScreen = () =>{
     if(ShowSplashScreen === true){
       return(
         <SplashScreen/>
       )
     } else{
-      if(TrgtTeamData !== null)
+      if(TrgtGrp !== null) 
       {
         return(
           <MainScreen 
-          TrgtTeamLabelData = {TrgtTeamLabelData} 
           pbnbData = {pbnbData} 
-          onSetTeam = {onSetTeam}
-          Teamitems = {Teamitems} 
-          setTeamitems = {setTeamitems}
+          onChangeGrp = {onChangeGrp}
+          TimeTableitems = {TimeTableitems} 
+          setTimeTableitems = {setTimeTableitems}
           setTrgtDate = {setTrgtDate}
           TrgtDate = {TrgtDate}
           />
@@ -93,7 +113,7 @@ export const App = () => {
       }
       else{
         return(
-          <SignInScreen onSetTeam = {onSetTeam} Teamitems = {Teamitems} setTeamitems = {setTeamitems}/>
+          <SignInScreen onChangeGrp = {onChangeGrp} TimeTableitems = {TimeTableitems} setTimeTableitems = {setTimeTableitems}/>
         )
       }
     }
