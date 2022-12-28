@@ -9,7 +9,7 @@ export const SignInScreen = (props) => {
     const [value, setValue] = useState(null);
 
     const onSetTeam = async () => {
-        props.onSetTeam(value);
+        props.onSetGrp(value);
     }
 
     return(

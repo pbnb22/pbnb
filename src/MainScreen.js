@@ -74,7 +74,7 @@ export const MainScreen = (props) => {
   const TeamStateChange = () => {
     if(value !== null)
     {
-      props.onSetTeam(value);
+      props.onSetGrp(value);
       handleClosePress();
     }
   }
