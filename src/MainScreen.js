@@ -214,12 +214,12 @@ export const MainScreen = (props) => {
           <View style={{flexDirection:'row',borderColor: 'black', borderWidth: 1.2, width: '40%', height: '48%'}}>
             <TouchableOpacity style={[eatSite === '10552' ? styles.site_click : styles.site_noclick]} onPress={()=>site("10552")}>
               <Text style={[eatSite === '10552' ? {color:'white'} : {color:'black'}]}>
-                현대 건설
+                임대동
               </Text>
             </TouchableOpacity>
             <TouchableOpacity style={[eatSite === '10095' ? styles.site_click : styles.site_noclick]} onPress={()=>site("10095")}>
               <Text style={[eatSite === '10095' ? {color:'white'} : {color:'black'}]}>
-                마북 1동
+                본관동
               </Text>
             </TouchableOpacity>
            </View>
