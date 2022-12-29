@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState, useCallback, useMemo } from "react";
-import {StyleSheet,View, Text, Image, TouchableOpacity, ScrollView, SafeAreaView} from 'react-native';
+import {StyleSheet, View, Text, Image, TouchableOpacity, ScrollView, SafeAreaView,} from 'react-native';
 import {BottomSheetBackdrop, BottomSheetModal,BottomSheetModalProvider,} from '@gorhom/bottom-sheet';
 import DropDownPicker from 'react-native-dropdown-picker';
 import axios from 'axios'; //For pbnb API Test
@@ -23,7 +23,7 @@ export const MainScreen = (props) => {
 
   const [loadingstate, setLoadingstate] = useState(false);
 
-  /* 화면 호출 시 현재 시간에 따른 식사 표기 */
+  /** 화면 호출 시 현재 시간에 따른 식사 표기 */
   useEffect(() => {
     const newDate = new Date(props.TrgtDate);
     getMenuApi(format((+newDate), 'yyyyMMdd'), eatSite); // 첫 메뉴는 현재 시간 기준 표기
@@ -40,14 +40,14 @@ export const MainScreen = (props) => {
     storageSite();
   },[]);
 
-  /* 시간에 따른 메뉴 결정 */
+  /** 시간에 따른 메뉴 결정 */
   const eat_hours  = (hours) => {
     if (hours < 8){breakfast();}
     else if (hours < 13){lunch();}
     else {dinner();}
   }
 
-  /*BottomSheet Function*/
+  /** BottomSheet Function*/
   const bottomSheetModalRef = useRef(null);
   const snapPoints = useMemo(() => ['25%', '50%'], []);
   const handlePresentModalPress = useCallback(() => {
@@ -70,7 +70,7 @@ export const MainScreen = (props) => {
   );
   const handleClosePress = () => bottomSheetModalRef.current.close()
 
-  /*Team 변경 함수 */
+  /** Team 변경 함수 */
   const TeamStateChange = () => {
     if(value !== null)
     {
@@ -79,7 +79,7 @@ export const MainScreen = (props) => {
     }
   }
 
-  /*요일 변경 함수 => 0: Today */
+  /** 요일 변경 함수 => 0: Today */
   const changeDate = (day) => {
     if(day === 0){ //day 파라미타가 0으로 오면 오늘 날짜를 보여줘요
       let newDate = new Date();
@@ -97,22 +97,22 @@ export const MainScreen = (props) => {
     }
   }
  
-  /* 전체 메뉴 중 아침 메뉴 확인 */
+  /** 전체 메뉴 중 아침 메뉴 확인 */
   const breakfast = () => {
     setEatTime('breakfirstList')
   }
 
-  /* 전체 메뉴 중 점심 메뉴 확인 */
+  /** 전체 메뉴 중 점심 메뉴 확인 */
   const lunch = () => {
     setEatTime('lunchList');
   }
 
-  /* 전체 메뉴 중 저녁 메뉴 확인 */
+  /** 전체 메뉴 중 저녁 메뉴 확인 */
   const dinner = () => {
     setEatTime('dinnerList');
   }
 
-  /* 식당에 따른 메뉴 확인 */
+  /** 식당에 따른 메뉴 확인 */
   const site = (bizplc_cd) => {
     setEatSite(bizplc_cd);
 
@@ -122,21 +122,21 @@ export const MainScreen = (props) => {
     };
   }
 
-  /* 서버에서 메뉴를 받아 오는 함수 */
+  /** 서버에서 메뉴를 받아 오는 함수 */
   const getMenuApi = async (apiDate, eatSite) => {
     setLoadingstate(true);
     const response = await axios.post('https://asia-northeast1-pbnb-2f164.cloudfunctions.net/menu_v_2_0_0',
       {
           st_dt: apiDate,
           end_dt: apiDate,
-          bizplc_cd: eatSite, // 10095: 1동 식당 코드 -> 식당 선택하게 하는 기능 추가 필요
+          bizplc_cd: eatSite, // 10095: 1동, 10552: 현대 건설
       },
     )
     setMenulist(response.data);
     setLoadingstate(false);
   }
 
-  /* 메뉴 표기 부분 */
+  /** 메뉴 표기 부분 */
   const viewMenu = () => {
     if (menulist[eatTime] !== undefined){
       // 한식, 간편식 A/B 표기용 반복
@@ -163,7 +163,7 @@ export const MainScreen = (props) => {
             <Imageload
               source={{uri: 'https://sfv.hyundaigreenfood.com' + value1.image,}}
               indicator={undefined}
-              style={[value1.image !== null ? {width: '100%', height: 250, marginTop:15, borderRadius:15, overflow:`hidden`} : {}]}
+              style={[value1.image !== null ? {width: '100%', aspectRatio:1.4, marginTop:15, borderRadius:15, overflow:`hidden`} : {}]}
               resizeMode='stretch'
               />
             <View style={{margin:15}}>
@@ -196,7 +196,7 @@ export const MainScreen = (props) => {
     }
   }
   return(
-    /* 전체 화면 표기 부분 */
+    /** 전체 화면 표기 부분 */
     <SafeAreaView>
       <View style = {styles.maincontainer}>
         <View style = {styles.container_topbar}>
