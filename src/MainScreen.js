@@ -8,6 +8,7 @@ import FastImage from "react-native-fast-image";
 import Spinner from 'react-native-loading-spinner-overlay';
 import { createImageProgress } from 'react-native-image-progress';
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { BannerAd, BannerAdSize, TestIds } from 'react-native-google-mobile-ads';
 
 const Imageload = createImageProgress(FastImage);
 
@@ -302,7 +303,6 @@ export const MainScreen = (props) => {
             {menulist ? viewMenu() : ''}
           </View>
         </ScrollView>
-         
         <BottomSheetModalProvider>
           <View style={{flex:1, justifyContent: 'center'}}>
             <BottomSheetModal
@@ -340,6 +340,10 @@ export const MainScreen = (props) => {
               </BottomSheetModal>
           </View>
         </BottomSheetModalProvider>
+        <BannerAd
+          unitId={TestIds.BANNER}
+          size={BannerAdSize.FULL_BANNER}
+        />
       </View>
     </SafeAreaView>
   );

@@ -5,6 +5,10 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { MainScreen } from './src/MainScreen';
 import axios from 'axios'; //For pbnb API Test
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import mobileAds from 'react-native-google-mobile-ads';
+
+// Google 광고를 초기화합니다. 반드시 App.js에 정의해야 해요.
+mobileAds().initialize().then(adapterStatuses => {});
 
 export const App = () => {
   const [ShowSplashScreen, setShowSplashScreen] = useState(true);
@@ -122,6 +126,7 @@ export const App = () => {
     <GestureHandlerRootView>
       {getScreen()}
     </GestureHandlerRootView>
+    
     
   );
 };
