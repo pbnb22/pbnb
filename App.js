@@ -25,7 +25,7 @@ export const App = () => {
   /**처음 앱 실행시 수행되는 HOOK이에요 */
   useEffect(
   ()=>{
-    setTimeout(()=>{setShowSplashScreen(false)}, 2000); // 2초후 ShowSplashScreen을 True로 Set해줘요
+    setTimeout(()=>{setShowSplashScreen(false)}, 1000); // 2초후 ShowSplashScreen을 True로 Set해줘요
     const getTeamData = async () => {
       const StoragedGrpData = await AsyncStorage.getItem("StoragedGrp");
       if(StoragedGrpData) {

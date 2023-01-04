@@ -50,7 +50,7 @@ export const MainScreen = (props) => {
 
   /** BottomSheet Function*/
   const bottomSheetModalRef = useRef(null);
-  const snapPoints = useMemo(() => ['25%', '50%'], []);
+  const snapPoints = useMemo(() => ['25%', '60%'], []);
   const handlePresentModalPress = useCallback(() => {
     bottomSheetModalRef.current?.present();
   }, []);
@@ -427,7 +427,7 @@ const styles = StyleSheet.create({
       justifyContent: 'flex-start',
       alignItems: 'center',
       width: 300,
-      marginTop: 130,
+      marginTop: 150,
       paddingTop: 15,
       paddingBottom: 15,
       borderRadius: 25,
