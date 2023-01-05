@@ -9,6 +9,7 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import { createImageProgress } from 'react-native-image-progress';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { BannerAd, BannerAdSize, TestIds } from 'react-native-google-mobile-ads';
+import { Platform } from 'react-native';
 
 const Imageload = createImageProgress(FastImage);
 
@@ -135,6 +136,15 @@ export const MainScreen = (props) => {
     )
     setMenulist(response.data);
     setLoadingstate(false);
+  }
+  /** 구글 Admob */
+  const admob = () =>{
+    return(
+      <BannerAd
+      unitId={TestIds.BANNER}
+      size={BannerAdSize.FULL_BANNER}
+      />
+    );
   }
 
   /** 메뉴 표기 부분 */
@@ -340,10 +350,7 @@ export const MainScreen = (props) => {
               </BottomSheetModal>
           </View>
         </BottomSheetModalProvider>
-        <BannerAd
-          unitId={TestIds.BANNER}
-          size={BannerAdSize.FULL_BANNER}
-        />
+        {Platform.OS !== 'ios' ? admob():''}
       </View>
     </SafeAreaView>
   );
