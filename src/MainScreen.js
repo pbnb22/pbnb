@@ -10,6 +10,8 @@ import { createImageProgress } from 'react-native-image-progress';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { BannerAd, BannerAdSize, TestIds } from 'react-native-google-mobile-ads';
 import { Platform } from 'react-native';
+import  { Calendar, LocaleConfig }  from  'react-native-calendars' ;
+import Modal from "react-native-modal";
 
 const Imageload = createImageProgress(FastImage);
 
@@ -24,6 +26,7 @@ export const MainScreen = (props) => {
   const [eatSite, setEatSite] = useState("10552");
 
   const [loadingstate, setLoadingstate] = useState(false);
+  const [CalVisible, setCalVisible] = useState(false);
 
   /** 화면 호출 시 현재 시간에 따른 식사 표기 */
   useEffect(() => {
@@ -93,10 +96,25 @@ export const MainScreen = (props) => {
     }
     else{ //day의 날짜에 따라 TrgtDate 기준으로 날짜
       let newDate = new Date(props.TrgtDate);
+      
       newDate.setDate(props.TrgtDate.getDate() + day);
+      console.log('date : '+ newDate);
       props.setTrgtDate(newDate);
+      
       getMenuApi(format((+newDate), 'yyyyMMdd'), eatSite)
     }
+  }
+  const setDate = (day) => {
+    let newDate = new Date();
+    console.log('day  : '+day.month)
+    newDate.setFullYear(day.year);
+    newDate.setMonth(day.month-1);
+    newDate.setDate(day.day);
+
+    props.setTrgtDate(newDate);
+    getMenuApi(format((+newDate), 'yyyyMMdd'), eatSite)
+
+    console.log('newdate'+newDate);
   }
  
   /** 전체 메뉴 중 아침 메뉴 확인 */
@@ -206,6 +224,12 @@ export const MainScreen = (props) => {
       )
     }
   }
+
+  const ViewCalendar = (day) => {
+    setCalVisible(false);
+    setDate(day);
+  }
+
   return(
     /** 전체 화면 표기 부분 */
     <SafeAreaView>
@@ -254,9 +278,13 @@ export const MainScreen = (props) => {
             />
           </TouchableOpacity>
           <View style={{margin: 5}}>
-            <Text style={{fontSize:16}}>
-              {props.TrgtDate.getFullYear() + '년 ' + (props.TrgtDate.getMonth()+1) + '월 ' + props.TrgtDate.getDate() + '일 ' + week[props.TrgtDate.getDay()] + '요일'}
-            </Text>
+            <TouchableOpacity
+            onPress={()=>setCalVisible(true)}
+            >
+              <Text style={{fontSize:16}}>
+                {props.TrgtDate.getFullYear() + '년 ' + (props.TrgtDate.getMonth()+1) + '월 ' + props.TrgtDate.getDate() + '일 ' + week[props.TrgtDate.getDay()] + '요일'}
+              </Text>
+            </TouchableOpacity>
             <TouchableOpacity style={{alignItems:'center', margin: 5}} onPress={()=>changeDate(0)}>
               <Text style={{textDecorationLine: 'underline'}}>
                 오늘 메뉴 이동
@@ -351,6 +379,16 @@ export const MainScreen = (props) => {
           </View>
         </BottomSheetModalProvider>
         {Platform.OS !== 'ios' ? admob():''}
+        <Modal 
+        isVisible={CalVisible}
+        onBackdropPress={() => setCalVisible(false)}
+        >
+          <Calendar
+            onDayPress={(day)=>ViewCalendar(day)
+            }
+          />
+        </Modal>
+
       </View>
     </SafeAreaView>
   );
@@ -439,6 +477,11 @@ const styles = StyleSheet.create({
       paddingBottom: 15,
       borderRadius: 25,
       backgroundColor: 'black',
+  },
+
+  calendar: {
+    borderBottomWidth: 1,
+    borderBottomColor: '#e0e0e0',
   }
 })
 
