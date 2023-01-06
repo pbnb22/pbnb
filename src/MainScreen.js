@@ -159,7 +159,7 @@ export const MainScreen = (props) => {
   const admob = () =>{
     return(
       <BannerAd
-      unitId={TestIds.BANNER}
+      unitId={'ca-app-pub-7624142922095364/3340944240'}
       size={BannerAdSize.FULL_BANNER}
       />
     );
