@@ -10,7 +10,7 @@ import { createImageProgress } from 'react-native-image-progress';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { BannerAd, BannerAdSize, TestIds } from 'react-native-google-mobile-ads';
 import { Platform } from 'react-native';
-import  { Calendar, LocaleConfig }  from  'react-native-calendars' ;
+import  { Calendar, }  from  'react-native-calendars' ;
 import Modal from "react-native-modal";
 
 const Imageload = createImageProgress(FastImage);
@@ -383,12 +383,18 @@ export const MainScreen = (props) => {
         isVisible={CalVisible}
         onBackdropPress={() => setCalVisible(false)}
         >
-          <Calendar
-            onDayPress={(day)=>ViewCalendar(day)
-            }
-          />
+          <View style={{borderRadius: 15, overflow: 'hidden',}}>
+            <Calendar
+              onDayPress={(day)=>ViewCalendar(day)}
+              initialDate={format((+props.TrgtDate), 'yyyy-MM-dd')}
+              monthFormat={'yyyy년 MM월'}
+              theme={{
+                todayTextColor: '#8333E9',
+                arrowColor: 'black',
+              }}
+            />
+          </View>
         </Modal>
-
       </View>
     </SafeAreaView>
   );

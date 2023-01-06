@@ -44,8 +44,8 @@ export const App = () => {
   useEffect(
   ()=>{
       getPbnbState(TrgtGrp)
-  },[week_en[TrgtDate.getDay()]])
-
+  },[TrgtDate])
+  
   /**TrgtGrp이 바뀜에 따라 빠밥 늦밥 정보를 불러오는 React Hook */
   useEffect(
     ()=>{
