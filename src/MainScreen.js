@@ -378,7 +378,7 @@ export const MainScreen = (props) => {
               </BottomSheetModal>
           </View>
         </BottomSheetModalProvider>
-        {Platform.OS !== 'ios' ? admob():''}
+        {Platform.OS === 'android' ? admob():''}
         <Modal 
         isVisible={CalVisible}
         onBackdropPress={() => setCalVisible(false)}
