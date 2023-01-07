@@ -157,12 +157,23 @@ export const MainScreen = (props) => {
   }
   /** 구글 Admob */
   const admob = () =>{
-    return(
-      <BannerAd
-      unitId={'ca-app-pub-7624142922095364/3340944240'}
-      size={BannerAdSize.FULL_BANNER}
-      />
-    );
+    if (Platform.OS === 'android'){
+      return(
+        <BannerAd
+        unitId={'ca-app-pub-7624142922095364/3340944240'}
+        size={BannerAdSize.FULL_BANNER}
+        />
+      );
+    }
+    else{
+      return(
+        <BannerAd
+        unitId={'ca-app-pub-7624142922095364/2589532562'}
+        size={BannerAdSize.FULL_BANNER}
+        />
+      );
+    }
+
   }
 
   /** 메뉴 표기 부분 */
@@ -378,7 +389,7 @@ export const MainScreen = (props) => {
               </BottomSheetModal>
           </View>
         </BottomSheetModalProvider>
-        {Platform.OS === 'android' ? admob():''}
+        {admob()}
         <Modal 
         isVisible={CalVisible}
         onBackdropPress={() => setCalVisible(false)}
