@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState, useCallback, useMemo } from "react";
-import {StyleSheet, View, Text, Image, TouchableOpacity, ScrollView, SafeAreaView,} from 'react-native';
+import { StyleSheet, View, Text, Image, TouchableOpacity, ScrollView, SafeAreaView, StatusBar } from 'react-native';
 import {BottomSheetBackdrop, BottomSheetModal,BottomSheetModalProvider,} from '@gorhom/bottom-sheet';
 import DropDownPicker from 'react-native-dropdown-picker';
 import axios from 'axios'; //For pbnb API Test
@@ -168,12 +168,12 @@ export const MainScreen = (props) => {
     else{
       return(
         <BannerAd
+        // unitId={TestIds.BANNER} 
         unitId={'ca-app-pub-7624142922095364/2589532562'}
         size={BannerAdSize.FULL_BANNER}
         />
       );
     }
-
   }
 
   /** 메뉴 표기 부분 */
@@ -244,6 +244,7 @@ export const MainScreen = (props) => {
   return(
     /** 전체 화면 표기 부분 */
     <SafeAreaView>
+      <StatusBar barStyle="dark-content" />
       <View style = {styles.maincontainer}>
         <View style = {styles.container_topbar}>
           <View style={[styles.pbnb, 
