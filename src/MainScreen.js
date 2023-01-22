@@ -241,10 +241,18 @@ export const MainScreen = (props) => {
     setDate(day);
   }
 
+  const barColor = () => {
+    if (Platform.OS === 'ios'){
+    return(
+      <StatusBar barStyle="dark-content" />
+    )
+    }
+  }
+
   return(
     /** 전체 화면 표기 부분 */
     <SafeAreaView>
-      <StatusBar barStyle="dark-content" />
+      {barColor()}
       <View style = {styles.maincontainer}>
         <View style = {styles.container_topbar}>
           <View style={[styles.pbnb, 
