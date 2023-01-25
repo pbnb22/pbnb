@@ -6,6 +6,9 @@ import { MainScreen } from './src/MainScreen';
 import axios from 'axios'; //For pbnb API Test
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import mobileAds from 'react-native-google-mobile-ads';
+import {request, PERMISSIONS} from 'react-native-permissions';
+import { requestTrackingPermission } from 'react-native-tracking-transparency';
+import { AppState, Platform } from 'react-native';
 
 // Google 광고를 초기화합니다. 반드시 App.js에 정의해야 해요.
 mobileAds().initialize().then(adapterStatuses => {});
@@ -21,6 +24,25 @@ export const App = () => {
     {label: '13:00~13:30', value: 'Ctime'},
   ]);
   const week_en = ['sun','mon','tue','wed','thu','fri','sat'];
+
+  const checkPermissionForIOS = async () => {
+    return await requestTrackingPermission();
+  }
+
+  useEffect(() => {
+    checkPermissionForIOS();
+  },[]);
+
+  useEffect(() => {
+    const listener = AppState.addEventListener('change', (status) => {
+      if (Platform.OS === 'ios' && status === 'active') {
+        request(PERMISSIONS.IOS.APP_TRACKING_TRANSPARENCY)
+          .then((result) => console.warn(result))
+          .catch((error) => console.warn(error));
+      }
+    });
+    return () => {listener.remove()}
+  }, []);
 
   /**처음 앱 실행시 수행되는 HOOK이에요 */
   useEffect(
