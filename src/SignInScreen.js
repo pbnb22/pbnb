@@ -11,20 +11,26 @@ export const SignInScreen = (props) => {
     return(
         <View style = {styles.container}>
             <View style = {styles.logo_container}>
-                <View style = {{marginTop : 50}}>
+                <View style = {{marginTop : 30}}>
                     <Image source={require('./assets/pbnb_logo.png')} style={styles.image_logo}/>
                 </View>
-                <View style={{margin :15}}>
+                {/* <View style={{margin :15}}>
                     <Text style ={{textAlign:'center', fontSize : 25, color: 'black', marginTop: 5, fontFamily: 'BMDoHyeon'}}> 
                         빠밥늦밥
                     </Text>
-                </View>
+                </View> */}
             </View>
 
             <View style = {styles.select_container}>
-                <View style = {{marginTop : 10, marginBottom: 5}}>
-                    <Text style ={{textAlign:'center'}}>
-                        앞으로 밥 먹는 순서를 알려드릴게요.
+                <View style = {{marginTop : 20, marginBottom: 5}}>
+                    <Text style ={{textAlign:'center', fontSize: 15}}>
+                        오늘 식사 순서가 언제셨나요? 
+                    </Text>
+                    <Text style ={{textAlign:'center', fontSize: 15}}>
+                        한번 설정하시면 앞으로는
+                    </Text>
+                    <Text style ={{textAlign:'center', fontSize: 15}}>
+                        빠밥늦밥이 밥 먹는 순서를 알려드릴께요.
                     </Text>
                 </View>
                 <View style={{marginTop : 25, marginBottom: 130 , width: 250}}>
@@ -59,13 +65,13 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         width: '100%',
         height: '100%',
+        backgroundColor: '#f6f3f2',
     },
 
     logo_container: {
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-
         width: '100%',
         flex : 1,
     },
@@ -79,8 +85,8 @@ const styles = StyleSheet.create({
     },
 
     image_logo: {
-        width: 120,
-        height: 120,
+        width: 250,
+        height: 250,
         resizeMode: 'contain',
     },
 

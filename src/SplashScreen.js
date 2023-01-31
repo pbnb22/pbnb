@@ -7,11 +7,11 @@ export const SplashScreen = () => {
             <View>
                 <Image source={require('./assets/pbnb_logo.png')} style={styles.image_logo}/>
             </View>
-            <View style={{margin :15}}>
+            {/* <View style={{margin :15}}>
                 <Text style={styles.text_logo}>
                     빠밥늦밥
                 </Text>
-            </View>
+            </View> */}
         </View>
     );
 };
@@ -23,11 +23,12 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         width: '100%',
         height: '100%',
+        backgroundColor: '#f6f3f2'
     },
 
     image_logo: {
-        width: 120,
-        height: 120,
+        width: 170,
+        height: 170,
         resizeMode: 'contain',
     },
 

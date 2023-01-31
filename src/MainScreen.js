@@ -54,7 +54,7 @@ export const MainScreen = (props) => {
 
   /** BottomSheet Function*/
   const bottomSheetModalRef = useRef(null);
-  const snapPoints = useMemo(() => ['25%', '60%'], []);
+  const snapPoints = useMemo(() => ['25%', '53%'], []);
   const handlePresentModalPress = useCallback(() => {
     bottomSheetModalRef.current?.present();
   }, []);
@@ -196,7 +196,7 @@ export const MainScreen = (props) => {
         )
         return(
           <View style={{borderBottomColor:"#8D8D8D", borderBottomWidth:0.5}}>
-            <Text style={{fontSize:23, fontStyle:'italic', color:'#A17B5F', fontWeight:'600',
+            <Text style={{fontSize:23, fontStyle:'italic', color:'#a36b4f', fontWeight:'600',
               marginTop:15}}>
               {value1.mealName}
             </Text>
@@ -255,46 +255,53 @@ export const MainScreen = (props) => {
       {barColor()}
       <View style = {styles.maincontainer}>
         <View style = {styles.container_topbar}>
-          <View style={[styles.pbnb, 
-            props.pbnbData == '휴일' ? {backgroundColor: '#FF7FAE'} : 
-            {backgroundColor: '#8333E9'}
-            ]}>
-            <Text 
-            style={{fontSize: 16, textAlign: 'center', color: 'white'}}
-            >
-              {props.pbnbData}
-            </Text>
+          <View style={{flexDirection:'row', alignItems: 'center'}}>
+            <View>
+              <Text style={{color: '#002c5f', fontSize: 18, fontWeight:'600', marginLeft:35}}>
+                현대자동차 마북연구소
+              </Text>
+            </View>
+            <View style={[styles.pbnb, 
+              props.pbnbData == '휴일' ? {backgroundColor: '#aacae6'} : 
+              {backgroundColor: '#00aad2'}
+              ]}>
+              <Text 
+              style={{fontSize: 16, textAlign: 'center', color: 'white'}}
+              >
+                {props.pbnbData}
+              </Text>
+            </View>
+            <TouchableOpacity 
+              style={{flexDirection: 'row', justifyContent:'flex-end', marginRight:20, width: 35}}
+              onPress={handlePresentModalPress}
+              >
+              <Image
+                source={require('./assets/refresh.png')}
+                style={{width: 23, height: 23}}
+                resizeMode='contain'
+              />
+            </TouchableOpacity>
           </View>
-
-          <View style={{flexDirection:'row',borderColor: 'black', borderWidth: 1.2, width: '40%', height: '48%'}}>
+          <View style={{ flexDirection:'row', width: '100%', height: '68%', }}>
             <TouchableOpacity style={[eatSite === '10552' ? styles.site_click : styles.site_noclick]} onPress={()=>site("10552")}>
-              <Text style={[eatSite === '10552' ? {color:'white'} : {color:'black'}]}>
+              <Text style={[eatSite === '10552' ? {color:'#002c5f', fontWeight:'700'} : {color:'#e4dcd3'}]}>
                 임대동
               </Text>
             </TouchableOpacity>
             <TouchableOpacity style={[eatSite === '10095' ? styles.site_click : styles.site_noclick]} onPress={()=>site("10095")}>
-              <Text style={[eatSite === '10095' ? {color:'white'} : {color:'black'}]}>
+              <Text style={[eatSite === '10095' ? {color:'#002c5f', fontWeight:'700'} : {color:'#e4dcd3'}]}>
                 본관동
               </Text>
             </TouchableOpacity>
-           </View>
-           <TouchableOpacity 
-            style={{flexDirection: 'row', justifyContent:'flex-end', marginRight:20, width: 50}}
-            onPress={handlePresentModalPress}
-            >
-            <Image
-              source={require('./assets/refresh.png')}
-              style={{width: 23, height: 23}}
-              resizeMode='contain'
-            />
-          </TouchableOpacity>
+          </View>
         </View>
+
         <View style={styles.itemcontainer}> 
           <TouchableOpacity style={{margin: 5}} onPress={()=>changeDate(-1)}>
             <Image
               source={require('./assets/left_arrow.png')}
-              style={{width: 25, height: 25}}
-              resizeMode='contain'
+              style={{width: 30, height: 30}}
+              resizeMode='stretch'
             />
           </TouchableOpacity>
           <View style={{margin: 5}}>
@@ -316,8 +323,8 @@ export const MainScreen = (props) => {
           onPress={()=>changeDate(+1)}>
             <Image
                 source={require('./assets/right_arrow.png')}
-                style={{width: 25, height: 25}}
-                resizeMode='contain'
+                style={{width: 30, height: 30}}
+                resizeMode='stretch'
             />
           </TouchableOpacity>
         </View>
@@ -409,8 +416,8 @@ export const MainScreen = (props) => {
               initialDate={format((+props.TrgtDate), 'yyyy-MM-dd')}
               monthFormat={'yyyy년 MM월'}
               theme={{
-                todayTextColor: '#8333E9',
-                arrowColor: 'black',
+                todayTextColor: '#00aad2',
+                arrowColor: '#e63312',
               }}
             />
           </View>
@@ -431,13 +438,15 @@ const styles = StyleSheet.create({
       height: '100%',
     },
     container_topbar: {
-      flexDirection: "row",
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      borderBottomColor: "#bdbdbd",
-      borderBottomWidth: 1,
+      flexDirection: "column",
+      // alignItems: 'center',
+      // justifyContent: 'space-between',
+      // borderBottomColor: "#bdbdbd",
+      // borderBottomWidth: 1,
       width:'100%',
-      height: 60,
+      height: 78,
+      marginTop: 5,
+      marginBottom: 10,
     },
     itemcontainer: {
       margin: 5,
@@ -447,27 +456,29 @@ const styles = StyleSheet.create({
     },
     pbnb: {
       borderRadius:15,
-      width: 50,
+      width: 60,
       height:30,
       justifyContent: 'center',
-      marginLeft: 20,
+      marginLeft: 'auto',
     },
     site_click: {
       justifyContent: 'center', 
       alignItems: 'center',
-      backgroundColor:'black', 
+      // backgroundColor:'black', 
       width:'50%', 
       height:'100%',
+      borderBottomColor: '#002c5f',
+      borderBottomWidth: 6
     },
     site_noclick: {
       justifyContent: 'center', 
       alignItems: 'center',
-      backgroundColor:'white', 
+      // backgroundColor:'white', 
       width:'50%', 
       height:'100%',
     },
     eattingtab: {
-      backgroundColor: '#EAE8E8',
+      backgroundColor: '#e4dcd3',
       height: 30,
       borderRadius:15, 
       marginLeft: 30,
@@ -488,13 +499,12 @@ const styles = StyleSheet.create({
       width: '33%',
       margin: 4,
       borderRadius:15,
-      backgroundColor: '#EAE8E8',
+      backgroundColor: '#e4dcd3',
       flexDirection: 'column',
       justifyContent: 'center',
       alignItems: 'center',
     },
     confirm: {
-      
       justifyContent: 'flex-start',
       alignItems: 'center',
       width: 300,
@@ -504,7 +514,6 @@ const styles = StyleSheet.create({
       borderRadius: 25,
       backgroundColor: 'black',
   },
-
   calendar: {
     borderBottomWidth: 1,
     borderBottomColor: '#e0e0e0',
