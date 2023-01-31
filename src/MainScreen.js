@@ -511,7 +511,7 @@ const styles = StyleSheet.create({
       marginTop: 150,
       paddingTop: 15,
       paddingBottom: 15,
-      borderRadius: 25,
+      borderRadius: 8,
       backgroundColor: 'black',
   },
   calendar: {
