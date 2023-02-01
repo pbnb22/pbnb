@@ -457,7 +457,7 @@ const styles = StyleSheet.create({
     pbnb: {
       borderRadius:15,
       width: 60,
-      height:30,
+      height:27,
       justifyContent: 'center',
       marginLeft: 'auto',
     },
@@ -508,7 +508,7 @@ const styles = StyleSheet.create({
       justifyContent: 'flex-start',
       alignItems: 'center',
       width: 300,
-      marginTop: 150,
+      marginTop: 110,
       paddingTop: 15,
       paddingBottom: 15,
       borderRadius: 8,

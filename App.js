@@ -19,9 +19,9 @@ export const App = () => {
   const [pbnbData, setpbnbData] = useState(null);
   const [TrgtGrp, setTrgtGrp] = useState(null);
   const [TimeTableitems, setTimeTableitems] = useState([
-    {label: '12:00~12:30', value: 'Atime'},
-    {label: '12:30~13:00', value: 'Btime'},
-    {label: '13:00~13:30', value: 'Ctime'},
+    {label: '11:50~12:15', value: 'Atime'},
+    {label: '12:15~12:40', value: 'Btime'},
+    {label: '12:40~13:10', value: 'Ctime'},
   ]);
   const week_en = ['sun','mon','tue','wed','thu','fri','sat'];
 

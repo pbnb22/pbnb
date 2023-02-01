@@ -30,10 +30,10 @@ export const SignInScreen = (props) => {
                         한번 설정하시면 앞으로는
                     </Text>
                     <Text style ={{textAlign:'center', fontSize: 15}}>
-                        빠밥늦밥이 밥 먹는 순서를 알려드릴께요.
+                        빠밥늦밥이 밥 먹는 순서를 알려드릴게요.
                     </Text>
                 </View>
-                <View style={{marginTop : 25, marginBottom: 130 , width: 250}}>
+                <View style={{marginTop : 25, marginBottom: 110 , width: 250}}>
                     <DropDownPicker
                     placeholder="오늘 밥먹는 순서는 언제에요?"
                     open={open}
@@ -101,6 +101,7 @@ const styles = StyleSheet.create({
         paddingRight: 100,
         borderRadius: 8,
         backgroundColor: 'black',
+        
     }
 
 })
