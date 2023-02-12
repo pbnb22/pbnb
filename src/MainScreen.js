@@ -47,7 +47,7 @@ export const MainScreen = (props) => {
 
   /** 시간에 따른 메뉴 결정 */
   const eat_hours  = (hours) => {
-    if (hours < 8){breakfast();}
+    if (hours < 9){breakfast();}
     else if (hours < 13){lunch();}
     else {dinner();}
   }
