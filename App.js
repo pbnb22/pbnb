@@ -19,9 +19,8 @@ export const App = () => {
   const [pbnbData, setpbnbData] = useState(null);
   const [TrgtGrp, setTrgtGrp] = useState(null);
   const [TimeTableitems, setTimeTableitems] = useState([
-    {label: '11:50~12:15', value: 'Atime'},
-    {label: '12:15~12:40', value: 'Btime'},
-    {label: '12:40~13:10', value: 'Ctime'},
+    {label: '빠밥', value: 'Atime'},
+    {label: '늦밥', value: 'Btime'},
   ]);
   const week_en = ['sun','mon','tue','wed','thu','fri','sat'];
 
@@ -80,41 +79,50 @@ export const App = () => {
   /** 빠밥 늦밥 정보 가져오기 (2부제) -> 3부제 사용으로 현재 미사용*/
   const getPbnbState = async (GrpData) => {
     if(GrpData !== null){
-      console.log('API : '+ GrpData," ",TrgtDate.getMonth()+1)
-      const response = await axios.get(
-        'https://asia-northeast1-pbnb-ed5fa.cloudfunctions.net/getPbnb',
-        {
-          params: {
-            TeamGrp : GrpData,
-            month : TrgtDate.getMonth()+1,
-            weekofday: week_en[TrgtDate.getDay()],
-          }
+      console.log('밥언제먹지 : '+ GrpData," ",TrgtDate.getMonth()+1)
+
+      if ((TrgtDate.getMonth()+1) % 2 == 0){
+        if (GrpData === 'Agrp'){
+          setpbnbData('빠밥')
         }
-      )
-      setpbnbData(response.data.status);
-      console.log('밥먹는 시간: '+ response.data.status)
+        else{
+          setpbnbData('늦밥')
+        }
+      }else{
+        if (GrpData === 'Agrp'){
+          setpbnbData('늦밥')
+        }
+        else{
+          setpbnbData('빠밥')
+        }
+      }
+      console.log('밥먹는 시간: '+ pbnbData)
     }
     
   };
   
  /** 소속 Group을 변경하기위해 수행되는 함수에요 */
-  const onChangeGrp = async (SelectedTimeTable) => {
-    if(SelectedTimeTable !== null){
-      console.log('Group SET API 호출 : '+ SelectedTimeTable," ",TrgtDate.getMonth()+1)
-      const response = await axios.get(
-        'https://asia-northeast1-pbnb-ed5fa.cloudfunctions.net/teamGrouping',
-        {
-          params: {
-            TimeTable : SelectedTimeTable,
-            month : TrgtDate.getMonth()+1,
-          }
-        }
-      )
-      console.log('Group SET API 호출 반환: '+ response.data.status);
-      setTrgtGrp(response.data.status);
-      AsyncStorage.setItem("StoragedGrp", response.data.status); 
+  const onSetGrp = async (SelectedPbnbState) => {
+    console.log('***Selected Group : ', SelectedPbnbState, " ", TrgtDate.getMonth()+1)
+
+    if (SelectedPbnbState === "Atime"){
+      if ((TrgtDate.getMonth()+1) % 2 == 0){
+        setTrgtGrp('Agrp');
+        AsyncStorage.setItem("StoragedGrp", 'Agrp'); 
+      }else{
+        setTrgtGrp('Bgrp');
+        AsyncStorage.setItem("StoragedGrp", 'Bgrp'); 
+      }
+    }else{
+      if ((TrgtDate.getMonth()+1) % 2 == 0){
+        setTrgtGrp('Bgrp');
+        AsyncStorage.setItem("StoragedGrp", 'Bgrp'); 
+      }else{
+        setTrgtGrp('Agrp');
+        AsyncStorage.setItem("StoragedGrp", 'Agrp'); 
+      }
     }
-  };
+  }
 
   /**Screen 화면 Manage 해주는 함수에요 */
   const getScreen = () =>{
@@ -128,17 +136,17 @@ export const App = () => {
         return(
           <MainScreen 
           pbnbData = {pbnbData} 
-          onChangeGrp = {onChangeGrp}
           TimeTableitems = {TimeTableitems} 
           setTimeTableitems = {setTimeTableitems}
           setTrgtDate = {setTrgtDate}
           TrgtDate = {TrgtDate}
+          onSetGrp = {onSetGrp}
           />
         )
       }
       else{
         return(
-          <SignInScreen onChangeGrp = {onChangeGrp} TimeTableitems = {TimeTableitems} setTimeTableitems = {setTimeTableitems}/>
+          <SignInScreen TimeTableitems = {TimeTableitems} setTimeTableitems = {setTimeTableitems} onSetGrp = {onSetGrp}/>
         )
       }
     }

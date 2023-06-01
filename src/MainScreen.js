@@ -79,7 +79,7 @@ export const MainScreen = (props) => {
   const TeamStateChange = () => {
     if(value !== null)
     {
-      props.onChangeGrp(value);
+      props.onSetGrp(value);
       handleClosePress();
     }
   }
@@ -262,8 +262,8 @@ export const MainScreen = (props) => {
               </Text>
             </View>
             <View style={[styles.pbnb, 
-              props.pbnbData == '휴일' ? {backgroundColor: '#aacae6'} : 
-              {backgroundColor: '#00aad2'}
+              props.pbnbData == '빠밥' ? {backgroundColor: '#00aad2'} : 
+              {backgroundColor: '#FF473E'}
               ]}>
               <Text 
               style={{fontSize: 16, textAlign: 'center', color: 'white'}}

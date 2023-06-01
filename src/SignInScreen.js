@@ -46,7 +46,7 @@ export const SignInScreen = (props) => {
                     />
                 </View>
                 <TouchableOpacity 
-                onPress={()=>props.onChangeGrp(TimeTablevalue)}
+                onPress={()=>props.onSetGrp(TimeTablevalue)}
                 style ={styles.confirm}>
                     <Text style ={{color : 'white'}}>
                         확인
